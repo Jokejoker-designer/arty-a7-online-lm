@@ -73,7 +73,7 @@ export function EasyLanding() {
         <AppWordmark />
         <AppRouteNav />
         <div className="ml-auto flex items-center gap-2">
-          <AppSourcePill source={INTERACTION.activeSource} live={INTERACTION.live} />
+          <AppSourcePill source={INTERACTION.activeSource} />
           <span className="hidden text-caption text-muted sm:inline">{INTERACTION.sourceNote}</span>
         </div>
       </header>

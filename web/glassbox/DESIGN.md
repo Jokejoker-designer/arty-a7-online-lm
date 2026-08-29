@@ -196,11 +196,11 @@ Tokens must land on chrome: `.gb-panel` reads `--gb-space-card`, `.gb-row` reads
 | --- | --- |
 | `AppWordmark` | Geist 600, 16–18. Equal weight across three routes |
 | `AppRouteNav` | Geist 500, 13. Active = weight 600 + Paper White. Hover = Arc Ice. Not a second process strip |
-| Level control | One segmented control in the Studio header. Settings may echo the level as text |
-| Process strip | Only process nav. Active = Arc Ice fill + data-driven pulse. Complete = BOARD green text. Waiting = Dust |
+| Level control | One segmented control in the Studio header. Dễ hiểu selected = Fog (`#9aa8b8`), never BOARD green. Settings may echo the level as text |
+| Process strip | Only process nav. Active = Arc Ice fill + data-driven pulse. Complete = Fog. Waiting = Dust. BOARD `#22c55e` is silicon proof only |
 | Rail | Groups only: Hỏi / xem · Bằng chứng · Máy. Process tabs `input`…`output` are strip-only. Rail active = left cyan-hot hairline + weight 600. Do not reuse strip-active paint on the rail |
 | Job card | Card radius 12, panel shadow. Enter: one-shot Arc Ice hairline, then settle |
-| Source pill | Provenance colour + word + glyph. Colour is never the only channel |
+| Source pill | `AppSourcePill` keys off real `BOARD` / `activeSource`, not a `live` boolean. Board Green only when the source is BOARD. Replay / Teacher / Frozen / Capture never wear it |
 | Primary button | Signal Cyan Hot fill, Night Well text. Pressed = Cyan Depth |
 | Insight | Header or rail footer. Not a page-level primary in `main` |
 | Composer | None. Recorded Q→A or no-interaction empty |

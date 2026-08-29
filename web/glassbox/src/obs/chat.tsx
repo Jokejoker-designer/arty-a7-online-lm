@@ -132,8 +132,8 @@ export function BoardChat() {
             <div
               className={
                 m.role === "user"
-                  ? "rounded-2xl rounded-tr-md bg-cyan/15 px-3 py-2 text-sm"
-                  : "rounded-2xl rounded-tl-md border border-line bg-surface px-3 py-2 text-sm obs-mono leading-5"
+                  ? "rounded-md bg-cyan/15 px-3 py-2 text-sm"
+                  : "rounded-md border border-line bg-surface px-3 py-2 text-sm obs-mono leading-5"
               }
             >
               {m.text}

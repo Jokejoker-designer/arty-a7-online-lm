@@ -49,12 +49,13 @@ export function AppRouteNav({ className }: { className?: string }) {
   );
 }
 
-export function AppSourcePill({
-  source,
-  live,
-}: {
-  source: string;
-  live?: boolean;
-}) {
-  return <Pill tone={live ? "board" : "warn"}>{source}</Pill>;
+function sourceTone(source: string) {
+  if (source === "BOARD") return "board" as const;
+  if (source === "STALL" || source === "ALERT") return "bad" as const;
+  return "warn" as const;
+}
+
+/** Board Green only for silicon BOARD. Replay / Teacher / Frozen / Capture never wear it. */
+export function AppSourcePill({ source }: { source: string }) {
+  return <Pill tone={sourceTone(source)}>{source}</Pill>;
 }

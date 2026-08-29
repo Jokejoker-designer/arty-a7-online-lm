@@ -151,7 +151,7 @@ export function StudioShell() {
               the screen. It reads BOARD only when a board is answering; a
               replayed or generated session says so, because a pill that always
               says BOARD tells the reader nothing and licenses an overclaim. */}
-          <AppSourcePill source={header.activeSource} live={header.live} />
+          <AppSourcePill source={header.activeSource} />
           <span className="text-micro uppercase tracking-wide text-muted">{teacherOff ? "EVAL" : header.mode}</span>
         </div>
         <div className="ml-auto flex items-center gap-2 text-caption">
@@ -194,7 +194,7 @@ export function StudioShell() {
                   "rounded-md px-2 py-1 text-caption",
                   level === lv
                     ? lv === "easy"
-                      ? "bg-ok/15 text-ok"
+                      ? "bg-raised text-muted"
                       : lv === "rtl"
                         ? "bg-warn/15 text-warn"
                         : "bg-cyan/15 text-cyan"
@@ -227,7 +227,7 @@ export function StudioShell() {
                 className={cn(
                   "gb-strip-enter gb-strip rounded-md px-2",
                   st === "active" && "gbx-active",
-                  st === "complete" && !current && "text-ok",
+                  st === "complete" && !current && "text-muted",
                   st === "waiting" && "text-subtle",
                   current && st !== "active" && "bg-raised font-semibold text-fg",
                 )}
