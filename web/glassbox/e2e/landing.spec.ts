@@ -87,5 +87,22 @@ test.describe("dễ hiểu landing", () => {
     expect(parseFloat(cozyPad)).toBe(16);
     await page.getByTestId("density-research").click();
     await expect(page.locator("html")).toHaveAttribute("data-density", "research");
+
+    await page.getByTestId("tab-live").click();
+    await expect(page.getByText("Tương tác đã ghi")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Teacher On" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Teacher Off" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Replay" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Freeze" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Frozen" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Xem bên trong" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Xem AI vừa học gì" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Gửi" })).toHaveCount(0);
+
+    await page.locator("body").click();
+    await page.keyboard.press("1");
+    await expect(page.getByTestId("tab-overview")).toHaveAttribute("aria-current", "page");
+    await page.keyboard.press("9");
+    await expect(page.getByTestId("tab-output")).toHaveAttribute("aria-current", "page");
   });
 });

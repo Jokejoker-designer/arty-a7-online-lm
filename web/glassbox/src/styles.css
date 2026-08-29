@@ -66,6 +66,8 @@
   --radius-md: 12px;
   --radius-lg: 12px;
   --radius-xl: 12px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
 
   --shadow-panel: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 10px 32px rgba(0, 0, 0, 0.32);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
