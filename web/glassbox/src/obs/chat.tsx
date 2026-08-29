@@ -115,9 +115,9 @@ export function BoardChat() {
       <header className="border-b border-line px-3 py-2">
         <div className="flex items-start justify-between gap-2">
           <div>
-            <p className="obs-kicker">03 Console</p>
-            <h2 className="text-sm font-medium tracking-tight text-fg">Phiên Live</h2>
-            <p className="text-[11px] text-subtle">Host không sinh next-token.</p>
+            <p className="obs-kicker">03 UART console</p>
+            <h2 className="text-sm font-medium tracking-tight text-fg">Nhật ký lệnh</h2>
+            <p className="text-[11px] text-subtle">Host không sinh next-token. Không phải Tương tác.</p>
           </div>
           <SourceBadge source={pending ? "STALL" : OBS_CAPTURE.comOpen ? "BOARD" : "ALERT"} />
         </div>
@@ -140,7 +140,7 @@ export function BoardChat() {
             </div>
             <div className="mt-1 flex flex-wrap items-center gap-2 text-caption text-subtle">
               <span>
-                {m.role === "user" ? "Bạn" : "Native AI"} · <span className="obs-mono">{m.time}</span>
+                {m.role === "user" ? "Bạn" : "UART"} · <span className="obs-mono">{m.time}</span>
               </span>
               <SourceBadge source={m.source} />
             </div>

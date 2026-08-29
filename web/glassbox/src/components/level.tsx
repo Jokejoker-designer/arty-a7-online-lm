@@ -9,7 +9,7 @@ const MODE: Record<
 > = {
   easy: {
     title: "Dễ hiểu",
-    body: "Cùng một lần chạy silicon — đang kể bằng lời. Số kỹ thuật đã ẩn.",
+    body: "Cùng một tương tác đã khóa — đang kể bằng lời. Số kỹ thuật đã ẩn.",
     tone: "text-ok",
     border: "border-ok/35 bg-ok/10",
   },
@@ -42,31 +42,16 @@ export function When({
   return <>{research ?? easy}</>;
 }
 
-export function ModeStrip() {
-  const { level, setLevel } = useStudio();
+/** Settings may echo the level as text. Not a third toggle. */
+export function ModeEcho() {
+  const { level } = useStudio();
   const m = MODE[level];
   return (
-    <div className={cn("mb-3 rounded-xl border px-3 py-2.5", m.border)}>
-      <div className="flex flex-wrap items-center gap-2">
-        <div className={cn("text-sm font-medium", m.tone)}>{m.title}</div>
-        <p className="min-w-0 flex-1 text-xs leading-relaxed text-muted">{m.body}</p>
-        <div className="flex rounded-lg border border-line/80 bg-bg/40 p-0.5">
-          {(["easy", "research", "rtl"] as const).map((lv) => (
-            <button
-              key={lv}
-              type="button"
-              onClick={() => setLevel(lv)}
-              className={cn(
-                "rounded-md px-2.5 py-1 text-caption",
-                level === lv ? cn("bg-card", MODE[lv].tone) : "text-subtle hover:text-fg",
-              )}
-            >
-              {lv === "easy" ? "Dễ hiểu" : lv === "research" ? "Research" : "RTL"}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
+    <p className={cn("text-[13px] leading-relaxed text-muted")}>
+      <span className={cn("font-medium", m.tone)}>{m.title}</span>
+      {" — "}
+      {m.body}
+    </p>
   );
 }
 

@@ -12,7 +12,7 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-line bg-card p-4 shadow-[var(--shadow-panel)]",
+        "rounded-md border border-line bg-card p-4 shadow-[var(--shadow-panel)]",
         className,
       )}
       {...rest}
@@ -53,7 +53,7 @@ export function Btn({
     <button
       type="button"
       className={cn(
-        "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-[opacity,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] disabled:opacity-40 active:scale-[0.98]",
+        "inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-3 text-sm font-medium transition-[opacity,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] disabled:opacity-40 active:scale-[0.98]",
         variant === "primary" && "bg-cyan text-bg hover:brightness-110",
         variant === "ghost" && "border border-line bg-raised text-fg hover:border-cyan/40",
         variant === "soft" && "bg-cyan/12 text-cyan hover:bg-cyan/20",

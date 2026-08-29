@@ -20,13 +20,13 @@ import {
   Workflow,
   X,
 } from "lucide-react";
-import { STAGE_LABEL, STAGES, TABS, TAB_SUB, type TabId } from "@/lib/data";
+import { RAIL_GROUPS, STAGE_LABEL, STAGES, TABS, TAB_SUB, type TabId } from "@/lib/data";
 import { useStudioHeader } from "@/lib/studio-header";
 import { useStudio } from "@/lib/store";
 import { cn } from "@/lib/utils";
+import { AppRouteNav, AppSourcePill, AppWordmark } from "./app-chrome";
 import { InsightRail } from "./insight";
-import { ModeStrip } from "./level";
-import { Btn, Pill } from "./ui";
+import { Btn } from "./ui";
 import { StudioState } from "./ui/studio-state";
 import { OverviewTab } from "./tabs/overview";
 import { LiveTab } from "./tabs/live";
@@ -92,10 +92,12 @@ export function StudioShell() {
     setInsightOpen,
     stageStates,
     teacherOff,
+    activeInteractionId,
   } = useStudio();
   const header = useStudioHeader();
   const Page = VIEW[tab];
   const hideRail = tab === "waveform";
+  const locked = Boolean(activeInteractionId);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -124,7 +126,7 @@ export function StudioShell() {
   }, [setSidebar, setInsightOpen, setTab, tab]);
 
   return (
-    <div className={cn("flex h-dvh min-h-0 flex-col overflow-hidden bg-bg text-fg", level === "rtl" && "font-mono")}>
+    <div className="flex h-dvh min-h-0 flex-col overflow-hidden bg-bg text-fg">
       <a
         href="#gb-main"
         data-testid="skip-to-main"
@@ -141,26 +143,16 @@ export function StudioShell() {
         >
           <Menu className="size-4" />
         </button>
-        <div className="flex items-center gap-2">
-          <span className="grid size-7 place-items-center rounded-md border border-cyan/40 bg-cyan/10">
-            <Cpu className="size-3.5 text-cyan" />
-          </span>
-          <div className="leading-tight">
-            <div className="text-[13px] font-medium">Native AI GlassBox</div>
-            <div className="text-micro text-subtle">Native-V1</div>
-          </div>
-        </div>
-        <div className="hidden items-center gap-2 md:flex">
-          <span className="font-mono text-xs tabular text-muted">#{header.id}</span>
+        <AppWordmark />
+        <AppRouteNav className="hidden md:flex" />
+        <div className="hidden items-center gap-2 lg:flex">
+          <span className="gb-num text-xs text-muted">#{header.id}</span>
           {/* §25 and §32.13. The source badge states what is actually feeding
               the screen. It reads BOARD only when a board is answering; a
               replayed or generated session says so, because a pill that always
               says BOARD tells the reader nothing and licenses an overclaim. */}
-          <Pill tone={header.live ? "board" : "warn"}>
-            {header.activeSource}
-          </Pill>
-          <Pill>{teacherOff ? "EVAL" : header.mode}</Pill>
-          <span className="hidden font-mono text-caption text-subtle xl:inline">{header.sessionLabel}</span>
+          <AppSourcePill source={header.activeSource} live={header.live} />
+          <span className="text-micro uppercase tracking-wide text-muted">{teacherOff ? "EVAL" : header.mode}</span>
         </div>
         <div className="ml-auto flex items-center gap-2 text-caption">
           <span
@@ -177,9 +169,22 @@ export function StudioShell() {
             />
             {header.sourceNote}
           </span>
-          <span className="hidden font-mono text-muted lg:inline">{header.clock}</span>
-          <span className="hidden font-mono text-subtle xl:inline">{header.build}…</span>
-          <div className="flex rounded-lg border border-line p-0.5">
+          <span className="hidden gb-num text-muted xl:inline">{header.clock}</span>
+          {hideRail ? null : (
+            <Btn
+              data-testid="open-insight"
+              className="gb-insight-open h-8 text-xs"
+              aria-expanded={insightOpen}
+              onClick={() => setInsightOpen(true)}
+            >
+              Mở insight
+            </Btn>
+          )}
+          <div
+            className="flex rounded-lg border border-line p-0.5"
+            role="group"
+            aria-label="Chế độ trình bày"
+          >
             {(["easy", "research", "rtl"] as const).map((lv) => (
               <button
                 key={lv}
@@ -203,20 +208,29 @@ export function StudioShell() {
         </div>
       </header>
 
-      <div className="flex h-10 shrink-0 items-center gap-1 overflow-x-auto border-b border-line px-3 gbx-scroll">
+      <nav
+        aria-label="Tiến trình xử lý của một tương tác"
+        className="flex h-10 shrink-0 items-center gap-1 overflow-x-auto border-b border-line px-3 gbx-scroll"
+      >
         {STAGES.map((s, i) => {
           const st = stageStates[s.id];
+          const current = tab === s.tab;
           return (
             <div key={s.id} className="flex items-center gap-1">
               {i > 0 ? <span className="text-subtle">→</span> : null}
               <button
                 type="button"
                 onClick={() => setTab(s.tab)}
+                data-testid={`tab-${s.tab}`}
+                aria-label={TABS.find((t) => t.id === s.tab)?.label ?? s.label}
+                aria-current={current ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-2 py-1 font-mono text-caption",
+                  "rounded-md px-2 py-1 text-caption",
+                  level !== "easy" && "font-mono",
                   st === "active" && "gbx-active bg-cyan/15 text-cyan",
-                  st === "complete" && "text-ok",
+                  st === "complete" && !current && "text-ok",
                   st === "waiting" && "text-subtle",
+                  current && st !== "active" && "bg-raised font-semibold text-fg",
                 )}
               >
                 {STAGE_LABEL[level][s.id]}
@@ -227,7 +241,7 @@ export function StudioShell() {
         <span className="ml-auto hidden text-caption text-subtle md:inline">
           Đang replay Interaction #{header.id} · snapshot {header.time}
         </span>
-      </div>
+      </nav>
 
       <div className="flex min-h-0 flex-1">
         <aside
@@ -242,31 +256,49 @@ export function StudioShell() {
               <X className="size-4" />
             </Btn>
           </div>
-          <nav className="space-y-0.5">
-            {TABS.map((t) => {
-              const Icon = ICONS[t.id];
-              const active = tab === t.id;
-              return (
-                <button
-                  key={t.id}
-                  type="button"
-                  onClick={() => setTab(t.id)}
-                  aria-label={t.label}
-                  data-testid={`tab-${t.id}`}
-                  aria-current={active ? "page" : undefined}
-                  className={cn(
-                    "flex w-full items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[13px]",
-                    active ? "bg-cyan/12 text-cyan" : "text-muted hover:bg-raised hover:text-fg",
-                  )}
-                >
-                  <Icon className="size-4 shrink-0" />
-                  <span className="min-w-0">
-                    <span className="block truncate">{t.label}</span>
-                    <span className="block truncate text-micro text-subtle">{TAB_SUB[level][t.id]}</span>
-                  </span>
-                </button>
-              );
-            })}
+          <div className="mb-3 px-1 lg:hidden">
+            <AppRouteNav />
+          </div>
+          <nav className="space-y-3" aria-label="Studio">
+            {RAIL_GROUPS.map((group) => (
+              <div key={group.id}>
+                <p className="px-2.5 pb-1 text-micro font-medium uppercase tracking-[0.12em] text-subtle">
+                  {group.label}
+                </p>
+                <div className="space-y-0.5">
+                  {group.tabs.map((id) => {
+                    const t = TABS.find((row) => row.id === id);
+                    if (!t) return null;
+                    const Icon = ICONS[t.id];
+                    const active = tab === t.id;
+                    return (
+                      <button
+                        key={t.id}
+                        type="button"
+                        onClick={() => setTab(t.id)}
+                        aria-label={t.label}
+                        data-testid={`tab-${t.id}`}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "flex w-full items-center gap-2 border-l-2 px-2.5 py-2 text-left text-[13px]",
+                          active
+                            ? "border-cyan font-semibold text-fg"
+                            : "border-transparent font-normal text-muted hover:bg-raised hover:text-fg",
+                        )}
+                      >
+                        <Icon className="size-4 shrink-0" />
+                        <span className="min-w-0">
+                          <span className="block truncate">{t.label}</span>
+                          <span className="block truncate text-micro font-normal text-subtle">
+                            {TAB_SUB[level][t.id]}
+                          </span>
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </nav>
         </aside>
         {sidebarOpen ? (
@@ -279,7 +311,7 @@ export function StudioShell() {
         ) : null}
         <div className="gb-studio-body flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
           <main id="gb-main" tabIndex={-1} className="min-h-0 min-w-0 flex-1 overflow-y-auto p-3 gbx-scroll md:p-4">
-            {!header.live ? (
+            {!header.live && locked ? (
               <div className="mb-3">
                 <StudioState
                   kind="disconnected"
@@ -288,21 +320,16 @@ export function StudioShell() {
                 />
               </div>
             ) : null}
-            {hideRail ? null : (
-              <div className="gb-insight-open mb-3 flex justify-end">
-                <Btn
-                  data-testid="open-insight"
-                  aria-expanded={insightOpen}
-                  onClick={() => setInsightOpen(true)}
-                >
-                  Mở insight
-                </Btn>
+            {!locked ? (
+              <StudioState
+                kind="no-interaction"
+                primary={{ label: "Mở session", onClick: () => setTab("experiments") }}
+              />
+            ) : (
+              <div key={level}>
+                <Page />
               </div>
             )}
-            <ModeStrip />
-            <div key={level}>
-              <Page />
-            </div>
           </main>
           {hideRail ? null : <InsightRail />}
         </div>

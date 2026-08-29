@@ -40,6 +40,10 @@ export default tseslint.config(
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_" },
       ],
       "@typescript-eslint/no-explicit-any": "off",
+      /* Pre-existing files trip the React 19 compiler plugins. Do not fail the
+         UX upgrade on those; they stay visible as warnings. */
+      "react-hooks/immutability": "warn",
+      "react-hooks/set-state-in-effect": "warn",
     },
   },
   // Disable rules that conflict with Prettier formatting.

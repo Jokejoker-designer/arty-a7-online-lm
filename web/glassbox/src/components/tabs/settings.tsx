@@ -1,4 +1,5 @@
 import { useStudio } from "@/lib/store";
+import { ModeEcho } from "../level";
 import { Btn, Field, Panel, PanelTitle, inputClass } from "../ui";
 
 /**
@@ -7,7 +8,7 @@ import { Btn, Field, Panel, PanelTitle, inputClass } from "../ui";
  * Owner: gb-ux-product.
  */
 export function SettingsTab() {
-  const { level, setLevel, projectName, setProjectName, setTab, connection, activeInteractionId } =
+  const { projectName, setProjectName, setTab, connection, activeInteractionId, density, setDensity } =
     useStudio();
   return (
     <div className="mx-auto max-w-3xl space-y-3">
@@ -22,14 +23,27 @@ export function SettingsTab() {
       </Panel>
       <Panel>
         <PanelTitle>Hiển thị</PanelTitle>
-        <div className="flex flex-wrap gap-2">
-          {(["easy", "research", "rtl"] as const).map((lv) => (
-            <Btn key={lv} variant={level === lv ? "primary" : "ghost"} onClick={() => setLevel(lv)}>
-              {lv === "easy" ? "Người mới" : lv === "research" ? "Chuyên gia" : "RTL"}
-            </Btn>
-          ))}
+        <ModeEcho />
+        <p className="mt-2 text-xs text-muted">
+          Chế độ Dễ hiểu / Research / RTL chỉ có một chỗ: thanh trên. Đổi cách kể, không đổi nguồn.
+        </p>
+        <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Mật độ">
+          <Btn
+            variant={density === "research" ? "primary" : "ghost"}
+            onClick={() => setDensity("research")}
+          >
+            Gọn
+          </Btn>
+          <Btn
+            variant={density === "comfortable" ? "primary" : "ghost"}
+            onClick={() => setDensity("comfortable")}
+          >
+            Thoáng
+          </Btn>
         </div>
-        <p className="mt-2 text-xs text-muted">Đổi cách trình bày, không đổi nguồn dữ liệu.</p>
+        <p className="mt-2 text-xs text-muted">
+          Mật độ ghi <span className="gb-num">data-density</span> trên tài liệu. Mặc định gọn (research).
+        </p>
       </Panel>
       <Panel>
         <PanelTitle>Nguồn dữ liệu</PanelTitle>

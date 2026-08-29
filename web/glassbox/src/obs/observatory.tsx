@@ -1,6 +1,5 @@
 import { useEffect, useState, type ComponentType } from "react";
-import { Cpu } from "lucide-react";
-import { Link } from "@tanstack/react-router";
+import { AppRouteNav, AppWordmark } from "@/components/app-chrome";
 import { OBS_CAPTURE, SILICON_WATERMARK, shaShort } from "./session";
 import { BoardChat } from "./chat";
 import { UartFooter } from "./footer";
@@ -50,17 +49,16 @@ export function Observatory() {
 
       <header className="obs-header" data-testid="obs-header">
         <div className="flex min-w-0 items-center gap-3">
-          <span className="grid size-8 place-items-center rounded-md border border-cyan/40 bg-cyan/10">
-            <Cpu className="size-4 text-cyan" />
-          </span>
+          <AppWordmark kicker="01 Status" />
           <div className="min-w-0 leading-tight">
-            <p className="obs-kicker">01 Status · Native AI GlassBox</p>
-            <h1 className="text-sm font-semibold">Native AI Observatory</h1>
+            <h1 className="text-sm font-semibold">Đài quan sát UART</h1>
             <p className="truncate text-[11px] text-subtle">
               {OBS_CAPTURE.board} · {OBS_CAPTURE.part}
             </p>
           </div>
         </div>
+
+        <AppRouteNav />
 
         <div className="flex flex-wrap items-center gap-2">
           <SourceBadge source="ALERT" />
@@ -69,13 +67,6 @@ export function Observatory() {
         </div>
 
         <SourceLegend />
-
-        <Link
-          to="/studio"
-          className="rounded-lg border border-line px-2.5 py-1 text-caption text-muted hover:text-fg"
-        >
-          Studio đầy đủ
-        </Link>
 
         <div className="ml-auto flex flex-wrap items-end gap-x-5 gap-y-1">
           <Fact label="BIT" value={shaShort(OBS_CAPTURE.bitSha)} />

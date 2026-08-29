@@ -252,17 +252,10 @@ export function MemoryGrid() {
 
 export function NodeFlow() {
   const { setTab, stageStates, replaying, level } = useStudio();
-  const map: Record<string, "input" | "encode" | "memory" | "learn" | "output"> = {
-    input: "input",
-    encoder: "encode",
-    memory: "memory",
-    learning: "learn",
-    output: "output",
-  };
   return (
     <div className="flex flex-wrap items-center gap-2">
       {FLOW_NODES.map((n, i) => {
-        const st = stageStates[map[n.id] ?? "input"];
+        const st = stageStates[n.id];
         const active = replaying && st === "active";
         const label = FLOW_LABEL[level][n.id] ?? n.label;
         return (

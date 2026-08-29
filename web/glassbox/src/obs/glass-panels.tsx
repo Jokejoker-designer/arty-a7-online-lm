@@ -4,7 +4,6 @@ import { HIDDEN_DIM, usagePercent } from "@/lib/contract";
 import { HealthLines } from "@/components/charts/health-lines";
 import { ProcessPipeline } from "@/components/charts/process-pipeline";
 import { DieMap } from "@/components/die-map";
-import { ModeStrip } from "@/components/level";
 import { EvidenceBadge } from "@/components/ui/evidence-badge";
 import { Kpi, Panel, PanelTitle } from "@/components/ui";
 import { NodeFlow, ResourceBars, Waterfall } from "@/components/viz";
@@ -59,8 +58,6 @@ export function GlassBoxInstrument() {
 
   return (
     <div className="space-y-3">
-      <ModeStrip />
-
       <div className="grid items-start gap-3 lg:grid-cols-2">
         <Panel>
           <PanelTitle hint="Routed report" action={<SourceBadge source="SYNTHETIC" />}>
@@ -77,7 +74,7 @@ export function GlassBoxInstrument() {
           </Panel>
           <Panel>
             <PanelTitle
-              hint="Đọc / Biểu diễn / So sánh / Học — fixture, không phải UART"
+              hint="Nhận câu → Mã hóa → So sánh → Học — fixture, không phải UART"
               action={<SourceBadge source="SYNTHETIC" />}
             >
               Tiến trình tương tác

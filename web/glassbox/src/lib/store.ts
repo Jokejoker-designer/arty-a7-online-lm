@@ -4,6 +4,7 @@ import { create } from "zustand";
 import { toast } from "sonner";
 import type {
   ConnectionState,
+  Density,
   EmbeddingRow,
   Projection2D,
   Session,
@@ -35,6 +36,7 @@ type StudioState = {
   projection: Projection2D | null;
   tab: TabId;
   level: ViewLevel;
+  density: Density;
   connected: boolean;
   sidebarOpen: boolean;
   selectedToken: number;
@@ -61,6 +63,7 @@ type StudioState = {
   captureNextRequested: boolean;
   setTab: (tab: TabId) => void;
   setLevel: (level: ViewLevel) => void;
+  setDensity: (density: Density) => void;
   setSidebar: (open: boolean) => void;
   setSelectedToken: (i: number) => void;
   setSelectedEpisode: (id: number) => void;
@@ -98,6 +101,7 @@ export const useStudio = create<StudioState>((set, get) => ({
   projection: projectionFor(SESSION_RECORD.interactions[0]?.interactionId ?? "1842"),
   tab: "overview",
   level: "easy",
+  density: "research",
   connected: false,
   sidebarOpen: false,
   selectedToken: 4,
@@ -128,6 +132,12 @@ export const useStudio = create<StudioState>((set, get) => ({
   insightOpen: false,
   captureNextRequested: false,
   setTab: (tab) => set({ tab, sidebarOpen: false, insightOpen: false }),
+  setDensity: (density) => {
+    set({ density });
+    if (typeof document !== "undefined") {
+      document.documentElement.dataset.density = density;
+    }
+  },
   setLevel: (level) => {
     set({ level });
     toast.message(
