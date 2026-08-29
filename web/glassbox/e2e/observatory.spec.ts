@@ -43,15 +43,17 @@ test.describe("observatory", () => {
     expect(font.toLowerCase()).toContain("jetbrains mono");
   });
 
-  test("chat does not invent a board answer", async ({ page }) => {
+  test("UART/host pane has no composer and stays silent", async ({ page }) => {
     await page.goto("/observatory");
-    await expect(page.getByRole("heading", { name: "Sơ đồ thiết bị" })).toBeVisible({
-      timeout: 20_000,
-    });
-    await page.getByLabel("Lệnh gửi tới FPGA").fill("pred bao nhiêu");
-    await page.getByRole("button", { name: "Gửi" }).click();
-    await expect(page.getByText("pred chưa phát trên UART")).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Nhật ký host" })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Gửi" })).toHaveCount(0);
+    await expect(page.getByLabel("Lệnh gửi tới FPGA")).toHaveCount(0);
+    await expect(page.getByTestId("obs-chat-silent")).toContainText("Không có composer");
+    await expect(page.getByTestId("obs-chat")).toContainText("UART / host");
+    await expect(page.getByTestId("obs-chat")).toContainText("pred=∅");
     await expect(page.getByTestId("obs-chat")).not.toContainText("pred=664");
+    await expect(page.getByTestId("obs-chat")).not.toContainText("Native AI");
+    await expect(page.getByTestId("obs-chat")).not.toContainText("Tương tác");
   });
 
   test("GlassBox charts are in the first viewport", async ({ page }) => {
