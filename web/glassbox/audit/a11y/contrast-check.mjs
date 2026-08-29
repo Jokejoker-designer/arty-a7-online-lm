@@ -74,6 +74,7 @@ const CHECKS = [
   { token: "gb-text-muted", min: 4.5, role: "body text" },
   { token: "gb-text-faint", min: 4.5, role: "supporting label text" },
   { token: "gb-primary", min: 4.5, role: "pill text" },
+  { token: "gb-arc", min: 3, role: "hover / strip-active (graphical)" },
   { token: "gb-primary-strong", min: 3, role: "focus ring (graphical)" },
   { token: "gb-pass", min: 4.5, role: "pill text" },
   { token: "gb-attention", min: 4.5, role: "pill text" },

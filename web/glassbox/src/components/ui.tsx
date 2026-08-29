@@ -55,7 +55,7 @@ export function Btn({
       className={cn(
         "inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-3 text-sm font-medium transition-[opacity,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] disabled:opacity-40 active:scale-[0.98]",
         variant === "primary" && "bg-cyan text-bg hover:brightness-110",
-        variant === "ghost" && "border border-line bg-raised text-fg hover:border-cyan/40",
+        variant === "ghost" && "border border-line bg-raised text-fg hover:border-arc/50 hover:text-arc",
         variant === "soft" && "bg-cyan/12 text-cyan hover:bg-cyan/20",
         variant === "danger" && "bg-bad/15 text-bad hover:bg-bad/25",
         className,

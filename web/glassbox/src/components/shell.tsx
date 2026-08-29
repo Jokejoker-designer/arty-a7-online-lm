@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ComponentType } from "react";
+import { useEffect, type ComponentType, type CSSProperties } from "react";
 import {
   Activity,
   BarChart3,
@@ -225,14 +225,13 @@ export function StudioShell() {
                 aria-label={TABS.find((t) => t.id === s.tab)?.label ?? s.label}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-2 text-caption",
-                  level !== "easy" && "font-mono",
-                  st === "active" && "gbx-active bg-cyan/15 text-cyan",
+                  "gb-strip-enter gb-strip rounded-md px-2",
+                  st === "active" && "gbx-active",
                   st === "complete" && !current && "text-ok",
                   st === "waiting" && "text-subtle",
                   current && st !== "active" && "bg-raised font-semibold text-fg",
                 )}
-                style={{ minHeight: "var(--gb-row-height)" }}
+                style={{ minHeight: "var(--gb-row-height)", "--gb-enter-i": i } as CSSProperties}
               >
                 {STAGE_LABEL[level][s.id]}
               </button>

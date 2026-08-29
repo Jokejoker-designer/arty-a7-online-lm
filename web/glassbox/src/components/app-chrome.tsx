@@ -19,7 +19,7 @@ export function AppWordmark({ kicker }: { kicker?: string }) {
       </span>
       <div className="min-w-0 leading-tight">
         {kicker ? <p className="text-micro font-medium uppercase tracking-[0.14em] text-subtle">{kicker}</p> : null}
-        <div className="truncate text-[13px] font-medium">Native AI GlassBox</div>
+        <div className="gb-wordmark truncate">Native AI GlassBox</div>
       </div>
     </div>
   );
@@ -37,8 +37,8 @@ export function AppRouteNav({ className }: { className?: string }) {
             to={route.to}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-lg px-2.5 py-1 text-[13px]",
-              active ? "font-semibold text-fg" : "font-normal text-muted hover:text-fg",
+              "gb-route rounded-lg px-2.5 py-1",
+              active ? "font-semibold text-fg" : "font-normal text-muted",
             )}
           >
             {route.label}
