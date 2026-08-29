@@ -21,7 +21,7 @@ export function SettingsTab() {
           Tên chỉ sống trên máy này. Không đổi bitstream hay luật học.
         </p>
       </Panel>
-      <Panel>
+      <Panel data-testid="settings-density-probe">
         <PanelTitle>Hiển thị</PanelTitle>
         <ModeEcho />
         <p className="mt-2 text-xs text-muted">
@@ -29,12 +29,14 @@ export function SettingsTab() {
         </p>
         <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Mật độ">
           <Btn
+            data-testid="density-research"
             variant={density === "research" ? "primary" : "ghost"}
             onClick={() => setDensity("research")}
           >
             Gọn
           </Btn>
           <Btn
+            data-testid="density-comfortable"
             variant={density === "comfortable" ? "primary" : "ghost"}
             onClick={() => setDensity("comfortable")}
           >

@@ -91,7 +91,7 @@ function LiveInsight() {
         </p>
         <div className="mt-3 flex gap-2">
           <Btn variant="primary" className="flex-1" onClick={() => setTab("live")}>
-            Mở hội thoại
+            Mở tương tác đã ghi
           </Btn>
         </div>
       </Panel>

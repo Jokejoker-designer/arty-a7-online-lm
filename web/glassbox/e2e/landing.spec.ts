@@ -17,6 +17,9 @@ test.describe("dễ hiểu landing", () => {
     await expect(page.getByTestId("tab-overview")).toHaveCount(0);
     await expect(page.getByTestId("obs-shell")).toHaveCount(0);
     await expect(page.getByText("CORE_START")).toHaveCount(0);
+    await expect(page.getByText("Suy luận")).toHaveCount(0);
+    await expect(page.getByText("Hội thoại với Native AI")).toHaveCount(0);
+    await expect(page.locator("html")).toHaveAttribute("data-density", "research");
   });
 
   test("shared chrome links Studio and Observatory at equal weight", async ({ page }) => {
@@ -28,5 +31,32 @@ test.describe("dễ hiểu landing", () => {
     await nav.getByRole("link", { name: "Studio" }).click();
     await expect(page).toHaveURL(/\/studio/);
     await expect(page.getByTestId("tab-overview")).toBeVisible({ timeout: 15_000 });
+  });
+
+  test("studio strip owns process; comfortable writes data-density", async ({ page }) => {
+    await page.goto("/studio");
+    await expect(page.getByTestId("tab-overview")).toBeVisible({ timeout: 15_000 });
+
+    const strip = page.getByRole("navigation", { name: "Tiến trình xử lý của một tương tác" });
+    await expect(strip.getByText("Nhận câu", { exact: true })).toBeVisible();
+    await expect(strip.getByText("Mã hóa", { exact: true })).toBeVisible();
+    await expect(strip.getByText("Mô hình", { exact: true })).toBeVisible();
+    await expect(page.getByText("Suy luận")).toHaveCount(0);
+    await expect(page.getByText("Hiểu", { exact: true })).toHaveCount(0);
+    await expect(page.getByText("Hội thoại với Native AI")).toHaveCount(0);
+    await expect(page.getByRole("group", { name: "Chế độ trình bày" })).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("data-density", "research");
+
+    await page.getByTestId("tab-settings").click();
+    const probe = page.getByTestId("settings-density-probe");
+    await expect(probe).toBeVisible();
+    const compactPad = await probe.evaluate((el) => getComputedStyle(el).paddingTop);
+    await page.getByTestId("density-comfortable").click();
+    await expect(page.locator("html")).toHaveAttribute("data-density", "comfortable");
+    const cozyPad = await probe.evaluate((el) => getComputedStyle(el).paddingTop);
+    expect(parseFloat(compactPad)).toBe(10);
+    expect(parseFloat(cozyPad)).toBe(16);
+    await page.getByTestId("density-research").click();
+    await expect(page.locator("html")).toHaveAttribute("data-density", "research");
   });
 });

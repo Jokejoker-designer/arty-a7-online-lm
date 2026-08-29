@@ -225,13 +225,14 @@ export function StudioShell() {
                 aria-label={TABS.find((t) => t.id === s.tab)?.label ?? s.label}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-2 py-1 text-caption",
+                  "rounded-md px-2 text-caption",
                   level !== "easy" && "font-mono",
                   st === "active" && "gbx-active bg-cyan/15 text-cyan",
                   st === "complete" && !current && "text-ok",
                   st === "waiting" && "text-subtle",
                   current && st !== "active" && "bg-raised font-semibold text-fg",
                 )}
+                style={{ minHeight: "var(--gb-row-height)" }}
               >
                 {STAGE_LABEL[level][s.id]}
               </button>
@@ -280,11 +281,12 @@ export function StudioShell() {
                         data-testid={`tab-${t.id}`}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "flex w-full items-center gap-2 border-l-2 px-2.5 py-2 text-left text-[13px]",
+                          "flex w-full items-center gap-2 border-l-2 px-2.5 text-left",
                           active
                             ? "border-cyan font-semibold text-fg"
                             : "border-transparent font-normal text-muted hover:bg-raised hover:text-fg",
                         )}
+                        style={{ minHeight: "var(--gb-row-height)", fontSize: "var(--gb-text-size-value)" }}
                       >
                         <Icon className="size-4 shrink-0" />
                         <span className="min-w-0">

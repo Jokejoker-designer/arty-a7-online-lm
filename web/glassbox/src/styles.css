@@ -184,6 +184,21 @@
   letter-spacing: -0.01em;
 }
 
+/* Density cascade. Compact-scientific is the written default on <html>. */
+.gb-panel {
+  padding: var(--gb-space-card);
+}
+
+.gb-row {
+  min-height: var(--gb-row-height);
+  padding-block: var(--gb-space-row);
+  font-size: var(--gb-text-size-value);
+}
+
+.gb-value {
+  font-size: var(--gb-text-size-value);
+}
+
 .text-ink {
   color: var(--gb-text);
 }

@@ -43,7 +43,7 @@ const JOBS = [
     id: "answer",
     title: "Trả lời",
     kicker: "Q → A đã ghi",
-    body: "Câu trả lời là bản ghi. Ô soạn thảo không sinh miệng sống: gửi câu mới chỉ ghi câu hỏi, không bịa token từ bo.",
+    body: "Câu trả lời là bản ghi Q → A. Không có ô hỏi sống. Một ô gửi không trả lời không được trang trí thành miệng.",
     fact: `«${INTERACTION.user}» → «${INTERACTION.answer ?? "chưa có câu trả lời từ bo."}»`,
   },
   {
@@ -97,7 +97,7 @@ export function EasyLanding() {
               <li
                 key={job.id}
                 data-testid={`job-${job.id}`}
-                className="rounded-xl border border-line bg-card px-4 py-3"
+                className="gb-panel rounded-xl border border-line bg-card"
               >
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="gb-num text-caption text-cyan">{String(i + 1).padStart(2, "0")}</span>

@@ -25,13 +25,13 @@ export function LiveTab() {
       <When
         easy={
           <p className="mb-3 text-[13px] text-muted">
-            Đây là bản ghi Interaction #{header.id}. Không có ô gửi — đường trả lời sống chưa có,
-            nên một composer sẽ giả một miệng.
+            Đây là bản ghi Interaction #{header.id}. Không có ô gửi. Đường trả lời sống chưa có,
+            nên không vẽ miệng.
           </p>
         }
         research={
           <p className="mb-3 text-caption text-subtle">
-            Nguồn {header.activeSource} · Interaction #{header.id} · sendChat không sinh câu trả lời.
+            Nguồn {header.activeSource} · Interaction #{header.id} · không có miệng sống.
           </p>
         }
         rtl={

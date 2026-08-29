@@ -117,7 +117,7 @@ export function BoardChat() {
           <div>
             <p className="obs-kicker">03 UART console</p>
             <h2 className="text-sm font-medium tracking-tight text-fg">Nhật ký lệnh</h2>
-            <p className="text-[11px] text-subtle">Host không sinh next-token. Không phải Tương tác.</p>
+            <p className="text-[11px] text-subtle">Host không sinh next-token. Nhật ký UART, không phải miệng sống.</p>
           </div>
           <SourceBadge source={pending ? "STALL" : OBS_CAPTURE.comOpen ? "BOARD" : "ALERT"} />
         </div>
