@@ -73,6 +73,19 @@ export const RAIL_GROUPS: { id: string; label: string; tabs: TabId[] }[] = [
   { id: "machine", label: "Máy", tabs: ["settings"] },
 ];
 
+/** Keys 1–9 and [ ] walk these nine documented targets, not the 15-tab bag. */
+export const KEYBOARD_TARGETS: TabId[] = [
+  "overview",
+  "live",
+  "input",
+  "forward",
+  "compare",
+  "learning",
+  "eam",
+  "model",
+  "output",
+];
+
 export const TRACE_Q_LABEL: Record<
   | "input"
   | "representation"

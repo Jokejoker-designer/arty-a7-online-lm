@@ -2,11 +2,10 @@ import { outputSelection, sessionView } from "@/lib/metrics";
 import { useStudioHeader } from "@/lib/studio-header";
 import { useStudio } from "@/lib/store";
 import { When } from "../level";
-import { Btn, Panel, PanelTitle, Pill } from "../ui";
+import { Panel, PanelTitle, Pill } from "../ui";
 
 export function LiveTab() {
-  const { chat, teacherOff, toggleTeacher, frozen, toggleFrozen, startReplay, setTab, level } =
-    useStudio();
+  const { chat, teacherOff, level } = useStudio();
   const header = useStudioHeader();
   const recorded = chat.filter((m) => m.id === "m1" || m.id === "m2");
   return (
@@ -50,8 +49,8 @@ export function LiveTab() {
             <div
               className={
                 m.role === "user"
-                  ? "rounded-2xl rounded-tr-md bg-cyan/15 px-3 py-2 text-sm"
-                  : "rounded-2xl rounded-tl-md border border-line bg-surface px-3 py-2 text-sm"
+                  ? "rounded-md bg-cyan/15 px-3 py-2 text-sm"
+                  : "rounded-md border border-line bg-surface px-3 py-2 text-sm"
               }
             >
               {m.text}
@@ -78,25 +77,10 @@ export function LiveTab() {
           ))}
         </div>
       ) : null}
-      <div className="mt-3 border-t border-line pt-3">
-        <p className="mb-2 text-caption text-subtle">
-          Teacher / Frozen / Replay là điều khiển máy này. Không đeo BOARD.
-        </p>
-        <div className="flex flex-wrap items-center gap-2">
-          <Btn className="h-8 text-xs" onClick={toggleTeacher}>
-            {teacherOff ? "Teacher Off" : "Teacher On"}
-          </Btn>
-          <Btn className="h-8 text-xs" onClick={startReplay}>
-            Replay
-          </Btn>
-          <Btn className="h-8 text-xs" onClick={toggleFrozen}>
-            {frozen ? "Frozen" : "Freeze"}
-          </Btn>
-          <Btn className="h-8 text-xs" onClick={() => setTab("learning")}>
-            {level === "easy" ? "Xem AI vừa học gì" : "Xem bên trong"}
-          </Btn>
-        </div>
-      </div>
+      <p className="mt-3 border-t border-line pt-3 text-caption text-subtle">
+        Không có Teacher / Freeze / Replay / xem bên trong trên tab này. Chúng không hoàn thành
+        một lượt bo.
+      </p>
     </Panel>
   );
 }

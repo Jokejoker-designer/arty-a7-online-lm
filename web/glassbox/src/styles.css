@@ -1,7 +1,8 @@
+@import "./fonts.css";
 @import "tailwindcss";
 
 /*
- * GlassBox Studio design tokens — SPEC §7.
+ * GlassBox tokens — DESIGN.md bound 2026-08-29.
  *
  * Two naming families live here on purpose. The short names (`bg`, `fg`,
  * `cyan`, `ok`, `warn`) are the ones the tab components use. The `--gb-*`
@@ -9,14 +10,13 @@
  * `src/design/tokens.ts`, because a canvas cannot use a Tailwind class. Both
  * point at the same values, and `audit/a11y/contrast-check.mjs` measures them.
  *
- * `tw-animate-css` was dropped along with its dependency: the two animations
- * this product needs are defined at the bottom of this file and are both
- * state-driven, per §8.2's rule against animation not backed by data.
+ * `tw-animate-css` was dropped along with its dependency. Motion here is
+ * one-shot enter or data-driven pulse. Endless glow is illegal.
  */
 
 @theme {
-  --font-sans: "IBM Plex Sans", system-ui, "Inter", "Segoe UI", sans-serif;
-  --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  --font-sans: "Geist", "Geist Variable", "Satoshi", "IBM Plex Sans", system-ui, "Segoe UI", Roboto, Inter, sans-serif;
+  --font-mono: "Geist Mono", "Geist Mono Variable", "JetBrains Mono", "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Surfaces */
   --color-bg: #070b10;
@@ -34,17 +34,19 @@
   --color-muted: #9aa8b8;
   --color-subtle: #8b99a9;
 
-  /* Source badges (locked): Green 500 BOARD, Blue 500 XSIM,
-     Amber 500 SYNTHETIC/TWIN, Red 500 STALL/ALERT, Cyan 400 ACTIVE/AI_RESPONSE. */
-  --color-cyan: #22d3ee;
+  /* Source badges (locked): Green 500 BOARD, Blue 500 XSIM chip fill,
+     Amber 500 SYNTHETIC/TWIN, Red 500 STALL/ALERT.
+     Current chrome primary is Signal Cyan Hot, not #3B82F6. */
+  --color-cyan: #2ee9ff;
+  --color-arc: #67e8f9;
   --color-cyan-dim: #155e75;
   --color-ok: #22c55e;
   --color-xsim: #3b82f6;
   --color-warn: #f59e0b;
   --color-bad: #ef4444;
   --color-learn: #a78bfa;
-  --color-mem: #2dd4bf;
-  --color-model: #60a5fa;
+  --color-mem: #2ee9d4;
+  --color-model: #7db8ff;
 
   /* §25 provenance. BOARD is the only authoritative source; the rest are
      cooler and lower-chroma so a TWIN reading cannot pass as silicon. */
@@ -54,15 +56,18 @@
   --color-ev-derived: #a78bfa;
   --color-ev-synthetic: #f59e0b;
   --color-ev-stall: #ef4444;
-  --color-ev-active: #22d3ee;
+  --color-ev-active: #2ee9ff;
 
   --text-micro: 0.625rem;
   --text-caption: 0.6875rem;
 
+  /* One radius scale. rounded-lg / rounded-xl resolve to card 12. */
   --radius-sm: 8px;
   --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
+  --radius-lg: 12px;
+  --radius-xl: 12px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
 
   --shadow-panel: 0 0 0 1px rgba(255, 255, 255, 0.04), 0 10px 32px rgba(0, 0, 0, 0.32);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
@@ -81,7 +86,9 @@
   --gb-text-muted: #9aa8b8;
   --gb-text-faint: #8b99a9;
 
-  --gb-primary: #22d3ee;
+  --gb-cyan-base: #22d3ee;
+  --gb-primary: #2ee9ff;
+  --gb-arc: #67e8f9;
   --gb-primary-strong: #67e8f9;
   --gb-primary-dim: #155e75;
   --gb-pass: #22c55e;
@@ -89,9 +96,9 @@
   /* Red 400 for AA text on raised surfaces. Chip fill stays Red 500 via --color-bad. */
   --gb-fail: #f87171;
   --gb-learn: #a78bfa;
-  --gb-memory: #2dd4bf;
-  --gb-model: #60a5fa;
-  --gb-output: #34d399;
+  --gb-memory: #2ee9d4;
+  --gb-model: #7db8ff;
+  --gb-output: #3ee8b0;
   --gb-inactive: #6d7b8a;
 
   --gb-evidence-board: #22c55e;
@@ -101,7 +108,7 @@
   --gb-evidence-derived: #a78bfa;
   --gb-evidence-synthetic: #f59e0b;
   --gb-evidence-stall: #ef4444;
-  --gb-evidence-active: #22d3ee;
+  --gb-evidence-active: #2ee9ff;
 
   --gb-radius-card: 12px;
   --gb-radius-control: 8px;
@@ -168,7 +175,7 @@
 
   /* §28 focus is always visible and never removed without replacement. */
   :focus-visible {
-    outline: 2px solid var(--color-cyan);
+    outline: 2px solid var(--gb-primary);
     outline-offset: 2px;
   }
 
@@ -244,19 +251,21 @@
 }
 
 /* §8.1 animated stage flow. Only an `active` stage animates, and `active` comes
-   from recorded or live state, never from a timer. */
+   from recorded or live state, never from a timer. Pulse ~2s ease-in-out. */
 @keyframes gbx-pulse {
   0%,
   100% {
-    box-shadow: 0 0 0 0 rgba(34, 211, 238, 0.4);
+    box-shadow: 0 0 0 0 color-mix(in oklab, var(--gb-arc) 40%, transparent);
   }
   50% {
-    box-shadow: 0 0 0 7px rgba(34, 211, 238, 0);
+    box-shadow: 0 0 0 7px color-mix(in oklab, var(--gb-arc) 0%, transparent);
   }
 }
 
 .gbx-active {
-  animation: gbx-pulse 1.8s var(--ease-out) infinite;
+  animation: gbx-pulse 2s ease-in-out infinite;
+  color: var(--gb-arc);
+  background: color-mix(in oklab, var(--gb-arc) 15%, transparent);
 }
 
 @keyframes gb-pulse {
@@ -270,7 +279,85 @@
 }
 
 .gb-stage-active {
-  animation: gb-pulse 1.4s ease-in-out infinite;
+  animation: gb-pulse 2s ease-in-out infinite;
+}
+
+@keyframes gb-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes gb-job-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+    border-color: var(--gb-arc);
+    box-shadow: 0 0 0 1px var(--gb-arc);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    border-color: var(--color-line);
+    box-shadow: var(--shadow-panel);
+  }
+}
+
+@keyframes gb-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.gb-job-enter,
+.gb-strip-enter {
+  --gb-enter-i: 0;
+  animation: gb-enter 200ms var(--ease-out) both;
+  animation-delay: calc(var(--gb-enter-i) * 180ms);
+}
+
+.gb-job-enter {
+  animation-name: gb-job-enter;
+}
+
+.gb-wordmark {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 17px;
+  letter-spacing: -0.011em;
+}
+
+.gb-route,
+.gb-strip {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.gb-route:hover,
+.gb-strip:hover {
+  color: var(--gb-arc);
+}
+
+.gb-job-title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: clamp(1.25rem, 1.8vw, 1.375rem);
+  letter-spacing: -0.011em;
+}
+
+.gb-vi {
+  font-family: "IBM Plex Sans", system-ui, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
 }
 
 .gbx-dot-live {
@@ -429,14 +516,26 @@
   }
 }
 
-/* §28 reduced motion actually disables animation rather than shortening it. */
+/* DESIGN.md: enter/stagger → 80ms fade. Pulse off. Never ignore. */
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
+  *:not(.gb-job-enter):not(.gb-strip-enter),
+  *:not(.gb-job-enter):not(.gb-strip-enter)::before,
+  *:not(.gb-job-enter):not(.gb-strip-enter)::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
+  }
+
+  .gb-job-enter,
+  .gb-strip-enter {
+    animation: gb-fade 80ms ease both !important;
+    animation-delay: 0ms !important;
+    transform: none;
+  }
+
+  .gbx-active,
+  .gb-stage-active {
+    animation: none !important;
   }
 }

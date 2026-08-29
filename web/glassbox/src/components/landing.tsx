@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import { Link } from "@tanstack/react-router";
 import { PHASE_ORDER, TRACEABILITY_QUESTIONS } from "@/lib/contract";
 import {
@@ -72,7 +73,7 @@ export function EasyLanding() {
         <AppWordmark />
         <AppRouteNav />
         <div className="ml-auto flex items-center gap-2">
-          <AppSourcePill source={INTERACTION.activeSource} live={INTERACTION.live} />
+          <AppSourcePill source={INTERACTION.activeSource} />
           <span className="hidden text-caption text-muted sm:inline">{INTERACTION.sourceNote}</span>
         </div>
       </header>
@@ -83,10 +84,10 @@ export function EasyLanding() {
             <p className="text-micro font-medium uppercase tracking-[0.14em] text-subtle">
               Một tương tác đã khóa
             </p>
-            <h1 className="mt-1 text-xl font-semibold tracking-tight">
+            <h1 className="gb-job-title mt-1">
               Năm việc GlassBox thật sự làm
             </h1>
-            <p className="mt-2 text-[13px] leading-relaxed text-muted">
+            <p className="gb-vi mt-2 text-muted">
               Tương tác #{INTERACTION.interactionId} trên Arty A7-100T. Màn này dạy. Studio đo.
               Đài quan sát xem UART stall. Ba lối đi, không gộp.
             </p>
@@ -97,21 +98,25 @@ export function EasyLanding() {
               <li
                 key={job.id}
                 data-testid={`job-${job.id}`}
-                className="gb-panel rounded-xl border border-line bg-card"
+                className="gb-job-enter gb-panel rounded-xl border border-line bg-card"
+                style={{ "--gb-enter-i": i } as CSSProperties}
               >
                 <div className="flex flex-wrap items-baseline gap-2">
                   <span className="gb-num text-caption text-cyan">{String(i + 1).padStart(2, "0")}</span>
-                  <h2 className="text-sm font-semibold">{job.title}</h2>
+                  <h2 className="gb-job-title">{job.title}</h2>
                   <span className="text-caption text-subtle">{job.kicker}</span>
                 </div>
-                <p className="mt-2 text-[13px] leading-relaxed text-muted">{job.body}</p>
+                <p className="gb-vi mt-2 text-muted">{job.body}</p>
                 {job.id === "construct" ? (
                   <div className="mt-3 space-y-3">
                     <ol className="flex flex-wrap items-center gap-1.5" aria-label="Bảy chặng PHASE_ORDER">
                       {PHASE_ORDER.map((phase, idx) => (
                         <li key={phase} className="flex items-center gap-1.5">
                           {idx > 0 ? <span className="text-subtle">→</span> : null}
-                          <span className="rounded-md border border-line bg-surface px-2 py-1 text-caption">
+                          <span
+                            className="gb-strip-enter rounded-md border border-line bg-surface px-2 py-1 text-caption"
+                            style={{ "--gb-enter-i": idx } as CSSProperties}
+                          >
                             {STAGE_LABEL.easy[PHASE_TO_STAGE[phase]]}
                           </span>
                         </li>
@@ -121,7 +126,7 @@ export function EasyLanding() {
                       {TRACEABILITY_QUESTIONS.map((q) => {
                         const ok = answered.has(q);
                         return (
-                          <li key={q} className="flex items-start gap-2 text-[13px]">
+                          <li key={q} className="gb-vi flex items-start gap-2">
                             <Pill tone={ok ? "ok" : "warn"}>{ok ? "Có" : "Thiếu"}</Pill>
                             <span className={ok ? "text-fg" : "text-muted"}>{TRACE_Q_LABEL[q]}</span>
                           </li>
@@ -135,7 +140,7 @@ export function EasyLanding() {
                     </p>
                   </div>
                 ) : (
-                  <p className="mt-2 text-[13px] text-fg">{job.fact}</p>
+                  <p className="gb-vi mt-2 text-fg">{job.fact}</p>
                 )}
               </li>
             ))}
@@ -150,7 +155,7 @@ export function EasyLanding() {
             </Link>
             <Link
               to="/observatory"
-              className="inline-flex h-9 items-center rounded-lg border border-line bg-raised px-3 text-sm font-medium text-fg"
+              className="inline-flex h-9 items-center rounded-lg border border-line bg-raised px-3 text-sm font-medium text-fg hover:border-arc/50 hover:text-arc"
             >
               Mở Đài quan sát
             </Link>

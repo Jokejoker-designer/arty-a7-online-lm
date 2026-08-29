@@ -1,7 +1,7 @@
 /**
  * Token access for code that cannot use Tailwind classes.
  *
- * `src/app/globals.css` is the single source of truth for every value here.
+ * `src/styles.css` is the single source of truth for every value here.
  * Canvas surfaces (waveform, 32x32 delta maps) need real colour strings, so
  * they resolve the same custom properties at runtime instead of duplicating
  * hex codes. A hardcoded colour anywhere in a component is a design-system
@@ -24,6 +24,8 @@ export const COLOR_TOKENS = [
   "primary",
   "primary-strong",
   "primary-dim",
+  "arc",
+  "cyan-base",
   "pass",
   "attention",
   "fail",
@@ -132,7 +134,7 @@ export const OBS_SOURCE_COPY = {
 /** §6.2 stage colours, so the process strip and the tab accents agree. */
 export const PHASE_TOKEN = {
   INPUT: "primary",
-  ENCODE: "primary-strong",
+  ENCODE: "arc",
   COMPARE: "attention",
   LEARN: "learn",
   MEMORY: "memory",

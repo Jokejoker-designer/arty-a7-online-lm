@@ -19,7 +19,7 @@ export function AppWordmark({ kicker }: { kicker?: string }) {
       </span>
       <div className="min-w-0 leading-tight">
         {kicker ? <p className="text-micro font-medium uppercase tracking-[0.14em] text-subtle">{kicker}</p> : null}
-        <div className="truncate text-[13px] font-medium">Native AI GlassBox</div>
+        <div className="gb-wordmark truncate">Native AI GlassBox</div>
       </div>
     </div>
   );
@@ -37,8 +37,8 @@ export function AppRouteNav({ className }: { className?: string }) {
             to={route.to}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-lg px-2.5 py-1 text-[13px]",
-              active ? "font-semibold text-fg" : "font-normal text-muted hover:text-fg",
+              "gb-route rounded-lg px-2.5 py-1",
+              active ? "font-semibold text-fg" : "font-normal text-muted",
             )}
           >
             {route.label}
@@ -49,12 +49,13 @@ export function AppRouteNav({ className }: { className?: string }) {
   );
 }
 
-export function AppSourcePill({
-  source,
-  live,
-}: {
-  source: string;
-  live?: boolean;
-}) {
-  return <Pill tone={live ? "board" : "warn"}>{source}</Pill>;
+function sourceTone(source: string) {
+  if (source === "BOARD") return "board" as const;
+  if (source === "STALL" || source === "ALERT") return "bad" as const;
+  return "warn" as const;
+}
+
+/** Board Green only for silicon BOARD. Replay / Teacher / Frozen / Capture never wear it. */
+export function AppSourcePill({ source }: { source: string }) {
+  return <Pill tone={sourceTone(source)}>{source}</Pill>;
 }

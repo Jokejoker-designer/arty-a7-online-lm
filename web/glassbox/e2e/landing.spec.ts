@@ -20,6 +20,35 @@ test.describe("dễ hiểu landing", () => {
     await expect(page.getByText("Suy luận")).toHaveCount(0);
     await expect(page.getByText("Hội thoại với Native AI")).toHaveCount(0);
     await expect(page.locator("html")).toHaveAttribute("data-density", "research");
+    await expect(page.getByTestId("job-create")).toHaveClass(/gb-job-enter/);
+    const face = await page.locator(".gb-wordmark").evaluate((el) => getComputedStyle(el).fontFamily);
+    expect(face).toMatch(/Geist/i);
+    const primary = await page.locator("html").evaluate((el) =>
+      getComputedStyle(el).getPropertyValue("--gb-primary").trim(),
+    );
+    expect(primary.toLowerCase()).toBe("#2ee9ff");
+    const arc = await page.locator("html").evaluate((el) =>
+      getComputedStyle(el).getPropertyValue("--gb-arc").trim(),
+    );
+    expect(arc.toLowerCase()).toBe("#67e8f9");
+  });
+
+  test("job stagger is one-shot and reduced-motion collapses delay", async ({ page }) => {
+    await page.goto("/");
+    const job = page.getByTestId("job-train");
+    const delay = await job.evaluate((el) => getComputedStyle(el).animationDelay);
+    expect(parseFloat(delay)).toBeGreaterThan(0);
+    const iterations = await job.evaluate((el) => getComputedStyle(el).animationIterationCount);
+    expect(iterations).toBe("1");
+
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await page.reload();
+    const reduced = page.getByTestId("job-train");
+    await expect(reduced).toBeVisible();
+    const reducedDelay = await reduced.evaluate((el) => getComputedStyle(el).animationDelay);
+    expect(parseFloat(reducedDelay)).toBe(0);
+    const duration = await reduced.evaluate((el) => getComputedStyle(el).animationDuration);
+    expect(parseFloat(duration)).toBeLessThanOrEqual(0.081);
   });
 
   test("shared chrome links Studio and Observatory at equal weight", async ({ page }) => {
@@ -58,5 +87,22 @@ test.describe("dễ hiểu landing", () => {
     expect(parseFloat(cozyPad)).toBe(16);
     await page.getByTestId("density-research").click();
     await expect(page.locator("html")).toHaveAttribute("data-density", "research");
+
+    await page.getByTestId("tab-live").click();
+    await expect(page.getByText("Tương tác đã ghi")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Teacher On" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Teacher Off" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Replay" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Freeze" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Frozen" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Xem bên trong" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Xem AI vừa học gì" })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: "Gửi" })).toHaveCount(0);
+
+    await page.locator("body").click();
+    await page.keyboard.press("1");
+    await expect(page.getByTestId("tab-overview")).toHaveAttribute("aria-current", "page");
+    await page.keyboard.press("9");
+    await expect(page.getByTestId("tab-output")).toHaveAttribute("aria-current", "page");
   });
 });

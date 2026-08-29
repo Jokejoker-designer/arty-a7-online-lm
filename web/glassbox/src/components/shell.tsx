@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, type ComponentType } from "react";
+import { useEffect, type ComponentType, type CSSProperties } from "react";
 import {
   Activity,
   BarChart3,
@@ -20,7 +20,7 @@ import {
   Workflow,
   X,
 } from "lucide-react";
-import { RAIL_GROUPS, STAGE_LABEL, STAGES, TABS, TAB_SUB, type TabId } from "@/lib/data";
+import { KEYBOARD_TARGETS, RAIL_GROUPS, STAGE_LABEL, STAGES, TABS, TAB_SUB, type TabId } from "@/lib/data";
 import { useStudioHeader } from "@/lib/studio-header";
 import { useStudio } from "@/lib/store";
 import { cn } from "@/lib/utils";
@@ -109,16 +109,20 @@ export function StudioShell() {
       const el = e.target as HTMLElement | null;
       if (el && (el.tagName === "INPUT" || el.tagName === "TEXTAREA" || el.tagName === "SELECT")) return;
       const n = Number(e.key);
-      if (n >= 1 && n <= 9) {
-        const t = TABS[n - 1];
-        if (t) setTab(t.id);
+      if (n >= 1 && n <= KEYBOARD_TARGETS.length) {
+        const dest = KEYBOARD_TARGETS[n - 1];
+        if (dest) setTab(dest);
         return;
       }
       if (e.key === "]" || e.key === "[") {
-        const i = TABS.findIndex((t) => t.id === tab);
-        const next = e.key === "]" ? (i + 1) % TABS.length : (i - 1 + TABS.length) % TABS.length;
-        const dest = TABS[next];
-        if (dest) setTab(dest.id);
+        const i = KEYBOARD_TARGETS.findIndex((id) => id === tab);
+        const from = i === -1 ? 0 : i;
+        const next =
+          e.key === "]"
+            ? (from + 1) % KEYBOARD_TARGETS.length
+            : (from - 1 + KEYBOARD_TARGETS.length) % KEYBOARD_TARGETS.length;
+        const dest = KEYBOARD_TARGETS[next];
+        if (dest) setTab(dest);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -151,7 +155,7 @@ export function StudioShell() {
               the screen. It reads BOARD only when a board is answering; a
               replayed or generated session says so, because a pill that always
               says BOARD tells the reader nothing and licenses an overclaim. */}
-          <AppSourcePill source={header.activeSource} live={header.live} />
+          <AppSourcePill source={header.activeSource} />
           <span className="text-micro uppercase tracking-wide text-muted">{teacherOff ? "EVAL" : header.mode}</span>
         </div>
         <div className="ml-auto flex items-center gap-2 text-caption">
@@ -194,7 +198,7 @@ export function StudioShell() {
                   "rounded-md px-2 py-1 text-caption",
                   level === lv
                     ? lv === "easy"
-                      ? "bg-ok/15 text-ok"
+                      ? "bg-raised text-muted"
                       : lv === "rtl"
                         ? "bg-warn/15 text-warn"
                         : "bg-cyan/15 text-cyan"
@@ -225,14 +229,13 @@ export function StudioShell() {
                 aria-label={TABS.find((t) => t.id === s.tab)?.label ?? s.label}
                 aria-current={current ? "page" : undefined}
                 className={cn(
-                  "rounded-md px-2 text-caption",
-                  level !== "easy" && "font-mono",
-                  st === "active" && "gbx-active bg-cyan/15 text-cyan",
-                  st === "complete" && !current && "text-ok",
+                  "gb-strip-enter gb-strip rounded-md px-2",
+                  st === "active" && "gbx-active",
+                  st === "complete" && !current && "text-muted",
                   st === "waiting" && "text-subtle",
                   current && st !== "active" && "bg-raised font-semibold text-fg",
                 )}
-                style={{ minHeight: "var(--gb-row-height)" }}
+                style={{ minHeight: "var(--gb-row-height)", "--gb-enter-i": i } as CSSProperties}
               >
                 {STAGE_LABEL[level][s.id]}
               </button>
