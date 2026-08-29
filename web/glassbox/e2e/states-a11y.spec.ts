@@ -56,8 +56,9 @@ test.describe("trạng thái, layout và a11y", () => {
     await ready(page);
     await page.keyboard.press("]");
     await expect(page.getByTestId("tab-live")).toHaveAttribute("aria-current", "page");
-    for (let i = 0; i < 12; i += 1) await page.keyboard.press("]");
-    await expect(page.getByTestId("tab-evidence")).toHaveAttribute("aria-current", "page");
+    for (let i = 0; i < 8; i += 1) await page.keyboard.press("]");
+    await expect(page.getByTestId("tab-overview")).toHaveAttribute("aria-current", "page");
+    await expect(page.getByTestId("tab-waveform")).not.toHaveAttribute("aria-current", "page");
 
     await page.getByTestId("skip-to-main").focus();
     await page.keyboard.press("Enter");
