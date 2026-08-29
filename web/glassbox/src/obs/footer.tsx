@@ -9,7 +9,7 @@ export function UartFooter() {
           <p className="obs-kicker">04 UART</p>
           <h2 className="text-sm font-medium tracking-tight text-fg">Capture log</h2>
           <p className="text-[11px] text-subtle">
-            {OBS_CAPTURE.uart} · {OBS_CAPTURE.baud}
+            {OBS_CAPTURE.uart} · {OBS_CAPTURE.baud} · {OBS_CAPTURE.comOpen ? "COM open" : "COM closed"}
           </p>
         </div>
         <div className="flex items-center gap-2">

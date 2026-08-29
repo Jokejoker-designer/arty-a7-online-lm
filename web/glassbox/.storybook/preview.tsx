@@ -8,7 +8,7 @@ const preview: Preview = {
   },
   decorators: [
     (Story) => (
-      <div className="min-h-screen bg-bg p-4 text-fg" data-density="comfortable">
+      <div className="min-h-screen bg-bg p-4 text-fg" data-density="research">
         <Story />
       </div>
     ),

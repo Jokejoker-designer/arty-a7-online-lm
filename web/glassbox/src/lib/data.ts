@@ -18,7 +18,7 @@ export type TabId =
   | "settings";
 
 export type ViewLevel = "easy" | "research" | "rtl";
-export type EvidenceSource = "BOARD" | "XSIM" | "TWIN" | "DERIVED" | "HOST EVAL";
+export type EvidenceSource = "BOARD" | "XSIM" | "TWIN" | "SYNTHETIC" | "DERIVED" | "HOST EVAL";
 export type StageId =
   | "input"
   | "encode"
@@ -31,7 +31,7 @@ export type StageState = "waiting" | "active" | "complete" | "error";
 
 export const TABS: { id: TabId; label: string; hint: string }[] = [
   { id: "overview", label: "Tổng quan", hint: "AI đang làm gì ngay bây giờ" },
-  { id: "live", label: "Phiên Live", hint: "Hội thoại với Native AI" },
+  { id: "live", label: "Tương tác", hint: "Câu hỏi → câu trả lời đã ghi" },
   { id: "input", label: "Dữ liệu vào", hint: "Chữ thành số" },
   { id: "forward", label: "Biểu diễn", hint: "Trạng thái nội bộ" },
   { id: "compare", label: "So sánh", hint: "Vì sao quyết định học" },
@@ -57,22 +57,51 @@ export const STAGES: { id: StageId; label: string; tab: TabId; ms: number; state
   { id: "output", label: "OUTPUT", tab: "output", ms: 5.6, state: "complete" },
 ];
 
-export const FLOW_NODES: { id: string; label: string; tab: TabId; ms: number }[] = [
-  { id: "input", label: "Input", tab: "input", ms: 0.8 },
-  { id: "encoder", label: "Encoder", tab: "forward", ms: 4.3 },
-  { id: "memory", label: "Memory", tab: "eam", ms: 8.7 },
-  { id: "learning", label: "Learning", tab: "learning", ms: 11.9 },
-  { id: "output", label: "Output", tab: "output", ms: 5.6 },
+export const FLOW_NODES: { id: StageId; label: string; tab: TabId; ms: number }[] = [
+  { id: "input", label: "INPUT", tab: "input", ms: 0.8 },
+  { id: "encode", label: "ENCODE", tab: "forward", ms: 4.3 },
+  { id: "compare", label: "COMPARE", tab: "compare", ms: 1.4 },
+  { id: "learn", label: "LEARN", tab: "learning", ms: 11.9 },
+  { id: "memory", label: "MEMORY", tab: "eam", ms: 8.7 },
+  { id: "model", label: "MODEL", tab: "model", ms: 61.2 },
+  { id: "output", label: "OUTPUT", tab: "output", ms: 5.6 },
 ];
+
+export const RAIL_GROUPS: { id: string; label: string; tabs: TabId[] }[] = [
+  { id: "ask", label: "Hỏi / xem", tabs: ["overview", "live"] },
+  { id: "evidence", label: "Bằng chứng", tabs: ["waveform", "metrics", "experiments", "board", "evidence"] },
+  { id: "machine", label: "Máy", tabs: ["settings"] },
+];
+
+export const TRACE_Q_LABEL: Record<
+  | "input"
+  | "representation"
+  | "decisionMetric"
+  | "learningDecision"
+  | "changedValues"
+  | "memoryAccess"
+  | "modelContext"
+  | "selectedToken",
+  string
+> = {
+  input: "Người dùng đưa gì vào?",
+  representation: "FPGA tạo biểu diễn nào?",
+  decisionMetric: "Metric nào dẫn tới quyết định?",
+  learningDecision: "Có học không, vì sao?",
+  changedValues: "Giá trị nào đổi?",
+  memoryAccess: "Bộ nhớ đọc/ghi gì?",
+  modelContext: "Mô hình nhận ngữ cảnh nào?",
+  selectedToken: "Token nào được chọn, cycle nào?",
+};
 
 export const STAGE_LABEL: Record<ViewLevel, Record<StageId, string>> = {
   easy: {
     input: "Nhận câu",
-    encode: "Hiểu",
+    encode: "Mã hóa",
     compare: "So sánh",
     learn: "Học",
     memory: "Nhớ",
-    model: "Suy luận",
+    model: "Mô hình",
     output: "Trả lời",
   },
   research: {
@@ -95,18 +124,14 @@ export const STAGE_LABEL: Record<ViewLevel, Record<StageId, string>> = {
   },
 };
 
-export const FLOW_LABEL: Record<ViewLevel, Record<string, string>> = {
-  easy: { input: "Nhận câu", encoder: "Hiểu", memory: "Nhớ", learning: "Học", output: "Trả lời" },
-  research: { input: "Input", encoder: "Encoder", memory: "Memory", learning: "Learning", output: "Output" },
-  rtl: { input: "valid_in", encoder: "mac_valid", memory: "axi_req", learning: "upd_en", output: "out_valid" },
-};
+export const FLOW_LABEL: Record<ViewLevel, Record<StageId, string>> = STAGE_LABEL;
 
 export const TAB_SUB: Record<ViewLevel, Record<TabId, string>> = {
   easy: {
     overview: "AI đang làm gì",
-    live: "Hội thoại",
+    live: "Q → A đã ghi",
     input: "Chữ thành số",
-    forward: "Cách AI hiểu",
+    forward: "Trạng thái sau mã hóa",
     compare: "Ba câu so sánh",
     learning: "Vừa học gì",
     eam: "Ký ức",
@@ -343,10 +368,10 @@ export const funnel = [
 ];
 
 export const memoryEvents = [
-  { t: "READ", detail: "cue hash 0xA91C", cycle: 8_218_102, src: "BOARD" as EvidenceSource },
-  { t: "HIT", detail: "Episode #488271", cycle: 8_218_188, src: "BOARD" as EvidenceSource },
-  { t: "READ", detail: "payload 64 B", cycle: 8_218_240, src: "BOARD" as EvidenceSource },
-  { t: "UPDATE", detail: "access count +1", cycle: 8_218_301, src: "BOARD" as EvidenceSource },
+  { t: "READ", detail: "cue hash 0xA91C", cycle: 8_218_102, src: "SYNTHETIC" as EvidenceSource },
+  { t: "HIT", detail: "Episode #488271", cycle: 8_218_188, src: "SYNTHETIC" as EvidenceSource },
+  { t: "READ", detail: "payload 64 B", cycle: 8_218_240, src: "SYNTHETIC" as EvidenceSource },
+  { t: "UPDATE", detail: "access count +1", cycle: 8_218_301, src: "SYNTHETIC" as EvidenceSource },
 ];
 
 export const eamQuery = [
@@ -467,20 +492,20 @@ export const expBars = [
 ];
 
 export const gates = [
-  { name: "Learning pass", status: "PASS" as const, src: "BOARD" as EvidenceSource },
-  { name: "Timing (WNS)", status: "PASS" as const, src: "BOARD" as EvidenceSource },
-  { name: "Memory integrity", status: "PASS" as const, src: "BOARD" as EvidenceSource },
+  { name: "Learning pass", status: "PASS" as const, src: "SYNTHETIC" as EvidenceSource },
+  { name: "Timing (WNS)", status: "PASS" as const, src: "TWIN" as EvidenceSource },
+  { name: "Memory integrity", status: "PASS" as const, src: "SYNTHETIC" as EvidenceSource },
   { name: "Collapse check", status: "PASS" as const, src: "DERIVED" as EvidenceSource },
   { name: "XSIM regression", status: "PASS" as const, src: "XSIM" as EvidenceSource },
   { name: "Twin ablation", status: "HOLD" as const, src: "TWIN" as EvidenceSource },
 ];
 
 export const evidenceRows: { metric: string; value: string; source: EvidenceSource }[] = [
-  { metric: "d_pos / d_neg", value: "1320 / 4810", source: "BOARD" },
+  { metric: "d_pos / d_neg", value: "1320 / 4810", source: "SYNTHETIC" },
   { metric: "M_L1", value: "+3490", source: "DERIVED" },
   { metric: "Cosine", value: "0.61", source: "DERIVED" },
-  { metric: "Waveform", value: "LiteScope 256K", source: "BOARD" },
-  { metric: "Weight delta", value: "286 writes", source: "BOARD" },
+  { metric: "Waveform", value: "LiteScope 256K", source: "SYNTHETIC" },
+  { metric: "Weight delta", value: "286 writes", source: "SYNTHETIC" },
   { metric: "AUC", value: "0.742", source: "HOST EVAL" },
   { metric: "Gradient estimate", value: "không đo trên silicon", source: "TWIN" },
 ];
@@ -501,7 +526,7 @@ export const waveformGroups = [
   },
   {
     id: "FORWARD",
-    easy: "Suy luận",
+    easy: "Mã hóa",
     signals: ["ready_fwd", "mac_valid", "h_idx[4:0]", "acc[15:0]", "sat_flag", "layer[1:0]"],
   },
   {
@@ -523,7 +548,7 @@ export const waveformGroups = [
 
 export const wfMarkers = [
   { t: 0.12, label: "User input accepted", easy: "Nhận câu hỏi", color: "var(--color-cyan)" },
-  { t: 0.31, label: "Hidden complete", easy: "Đã hiểu câu", color: "var(--color-ok)" },
+  { t: 0.31, label: "Hidden complete", easy: "Đã mã hóa câu", color: "var(--color-ok)" },
   { t: 0.44, label: "Margin check", easy: "So sánh đúng/sai", color: "var(--color-warn)" },
   { t: 0.52, label: "Update started", easy: "Bắt đầu học", color: "var(--color-learn)" },
   { t: 0.71, label: "Episode hit", easy: "Nhớ ra ký ức", color: "var(--color-mem)" },

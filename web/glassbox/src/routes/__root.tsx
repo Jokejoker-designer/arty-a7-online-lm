@@ -1,5 +1,6 @@
 import { createRootRoute, HeadContent, Outlet, Scripts } from "@tanstack/react-router";
 import { Toaster } from "sonner";
+import { DensityRoot } from "@/components/density-root";
 import appCss from "../styles.css?url";
 
 /**
@@ -13,9 +14,10 @@ import appCss from "../styles.css?url";
  * change. A claim about measured state belongs on screen next to its
  * provenance, where it can be read and checked, not in something that fades.
  *
- * `data-density` starts at `comfortable` per §7.6 and is switched by the shell.
+ * `data-density` defaults to compact-scientific (`research`). Comfortable is a
+ * toggle that writes the attribute; it is not hardcoded.
  */
-const APP_NAME = "Native AI Observatory";
+const APP_NAME = "Native AI GlassBox";
 
 export const Route = createRootRoute({
   head: () => ({
@@ -27,7 +29,7 @@ export const Route = createRootRoute({
       {
         name: "description",
         content:
-          "Native AI Observatory — Arty A7-100T UART silicon, pipeline, Vivado snapshot.",
+          "Native AI GlassBox — Dễ hiểu, Studio, Đài quan sát UART trên Arty A7-100T.",
       },
     ],
     links: [
@@ -41,16 +43,17 @@ export const Route = createRootRoute({
       },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap",
       },
     ],
   }),
   component: () => (
-    <html lang="vi" data-density="comfortable" suppressHydrationWarning>
+    <html lang="vi" data-density="research" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body className="bg-bg text-fg antialiased">
+        <DensityRoot />
         <Outlet />
         <Toaster
           theme="dark"

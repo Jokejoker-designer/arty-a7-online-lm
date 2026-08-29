@@ -22,6 +22,7 @@ export default defineConfig({
     "s36-frontend.spec.ts",
     "adapter-wiring.spec.ts",
     "observatory.spec.ts",
+    "landing.spec.ts",
   ],
   fullyParallel: true,
   forbidOnly: Boolean(process.env.CI),

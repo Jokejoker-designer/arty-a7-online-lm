@@ -20,11 +20,11 @@ import { EvidenceBadge } from "@/components/ui/evidence-badge";
 
 /** §9 uses the user-facing verbs, not the internal phase names. */
 const PHASE_LABEL: Record<Phase, string> = {
-  INPUT: "Đọc",
-  ENCODE: "Biểu diễn",
+  INPUT: "Nhận câu",
+  ENCODE: "Mã hóa",
   COMPARE: "So sánh",
   LEARN: "Học",
-  MEMORY: "Bộ nhớ",
+  MEMORY: "Nhớ",
   MODEL: "Mô hình",
   OUTPUT: "Trả lời",
 };

@@ -12,7 +12,7 @@ export function Panel({
   return (
     <section
       className={cn(
-        "rounded-2xl border border-line bg-card p-4 shadow-[var(--shadow-panel)]",
+        "gb-panel rounded-md border border-line bg-card shadow-[var(--shadow-panel)]",
         className,
       )}
       {...rest}
@@ -53,7 +53,7 @@ export function Btn({
     <button
       type="button"
       className={cn(
-        "inline-flex h-9 items-center justify-center gap-1.5 rounded-lg px-3 text-sm font-medium transition-[opacity,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] disabled:opacity-40 active:scale-[0.98]",
+        "inline-flex h-9 items-center justify-center gap-1.5 rounded-sm px-3 text-sm font-medium transition-[opacity,background-color,border-color,transform] duration-150 ease-[var(--ease-out)] disabled:opacity-40 active:scale-[0.98]",
         variant === "primary" && "bg-cyan text-bg hover:brightness-110",
         variant === "ghost" && "border border-line bg-raised text-fg hover:border-cyan/40",
         variant === "soft" && "bg-cyan/12 text-cyan hover:bg-cyan/20",
@@ -106,9 +106,9 @@ export function Kpi({
   tone?: string;
 }) {
   return (
-    <div className="rounded-xl border border-line bg-surface px-3 py-2.5">
+    <div className="rounded-xl border border-line bg-surface px-3" style={{ paddingBlock: "var(--gb-space-row)" }}>
       <div className="text-caption text-subtle">{label}</div>
-      <div className={cn("mt-1 font-mono text-lg tabular leading-none", tone)}>{value}</div>
+      <div className={cn("gb-value mt-1 font-mono tabular leading-none", tone)}>{value}</div>
       {sub ? <div className="mt-1 text-caption text-muted">{sub}</div> : null}
     </div>
   );
@@ -179,7 +179,7 @@ export function Range({
 
 export function Row({ k, v }: { k: string; v: ReactNode }) {
   return (
-    <div className="flex justify-between gap-3 border-b border-line/60 py-1.5 text-[13px]">
+    <div className="gb-row flex justify-between gap-3 border-b border-line/60">
       <dt className="text-subtle">{k}</dt>
       <dd className="font-mono text-fg">{v}</dd>
     </div>

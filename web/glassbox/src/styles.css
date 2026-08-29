@@ -15,7 +15,7 @@
  */
 
 @theme {
-  --font-sans: "Inter", "Roboto", "Segoe UI", system-ui, sans-serif;
+  --font-sans: "IBM Plex Sans", system-ui, "Inter", "Segoe UI", sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, monospace;
 
   /* Surfaces */
@@ -103,24 +103,29 @@
   --gb-evidence-stall: #ef4444;
   --gb-evidence-active: #22d3ee;
 
-  --gb-radius-card: 14px;
-  --gb-radius-control: 10px;
+  --gb-radius-card: 12px;
+  --gb-radius-control: 8px;
   --gb-radius-pill: 999px;
 
-  /* §7.6 density */
-  --gb-space-card: 16px;
-  --gb-space-row: 10px;
-  --gb-row-height: 32px;
-  --gb-text-size-value: 15px;
+  /* Compact-scientific default. Comfortable is a written data-density toggle. */
+  --gb-space-card: 10px;
+  --gb-space-row: 6px;
+  --gb-row-height: 26px;
+  --gb-text-size-value: 13px;
 }
 
-/* Matches any element, not just :root, so a Storybook decorator gets the same
-   cascade the app gets on <html>. */
 [data-density="research"] {
   --gb-space-card: 10px;
   --gb-space-row: 6px;
   --gb-row-height: 26px;
   --gb-text-size-value: 13px;
+}
+
+[data-density="comfortable"] {
+  --gb-space-card: 16px;
+  --gb-space-row: 10px;
+  --gb-row-height: 32px;
+  --gb-text-size-value: 15px;
 }
 
 @layer base {
@@ -177,6 +182,21 @@
   font-family: var(--font-mono);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
+}
+
+/* Density cascade. Compact-scientific is the written default on <html>. */
+.gb-panel {
+  padding: var(--gb-space-card);
+}
+
+.gb-row {
+  min-height: var(--gb-row-height);
+  padding-block: var(--gb-space-row);
+  font-size: var(--gb-text-size-value);
+}
+
+.gb-value {
+  font-size: var(--gb-text-size-value);
 }
 
 .text-ink {
