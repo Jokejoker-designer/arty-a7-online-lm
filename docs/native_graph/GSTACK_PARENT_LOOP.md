@@ -34,7 +34,7 @@ force-push, identity invention (CLASS_ID as NID / LM token / first member).
 
 ## Current lake
 
-U6Q OOC PASS. P3 LIMIT / P4 persist / P5 close-path Root-B / P6 rtl glue PASS.
-Next: P7 unified SoC XSim **BLOCKED** (MIG dirty). Not U8R/U9/PROGRAM.
+P7 TYPE_CLASS chain XSim PASS (raw query, rtl glue, pred=861 MISMATCH).
+SoC top still `native_ctx_bind`. Next: P7b WDMA/Root-B txn matrix. Not U8R/PROGRAM.
 Do not program `1F0F2ABB`. PROGRAM only at U10 on a new unique bit.
 Semantic LM claim remains MISMATCH until a new checkpoint exists.
