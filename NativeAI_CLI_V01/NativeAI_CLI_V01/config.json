@@ -2,15 +2,16 @@
   "branch": "grok-orch/v31-canonical-00",
   "default_backend": "demo",
   "default_trace": "full",
-  "cli_version": "0.2.8",
-  "head": "40bb05fed2c6d0eacf1cf0b073c7781b891cc477",
-  "model_state": "PRE-GATE14 / U7 XSim PASS / U8-R0 legacy C9-LM chain PASS / U8-R1 vocab contract NEXT / QHEAD CLOSED",
+  "cli_version": "0.2.9",
+  "head": "2a4745e9cc3f6ac6f7b7c8c77b4ec1951e0e716f",
+  "model_state": "PRE-GATE14 / U7 PASS / U8-R0 PASS / U8-R1 MEASURE_PASS MISMATCH / QHEAD CLOSED",
   "notes": [
     "demo backend replays frozen U6 host/XSim gold traces; it is not silicon and never claims a Native-AI final answer",
     "xsim adapter still does not launch Vivado; it reports the frozen U6 bag path",
     "uart adapter locked until authorized board/LM chain",
     "BIT=NO PROGRAM=NO REPROGRAM_AGAIN=NO",
     "U7 XSim PASS is contextual prior ranking on the DEPTH=32 working set; not silicon; not Q-head",
-    "U8-R0 PASS is legacy C9 to LM-06 reachability only; not TYPE_CLASS to LM; HOLD_A not retargeted"
+    "U8-R0 PASS is legacy C9 to LM-06 reachability only; not TYPE_CLASS to LM; HOLD_A not retargeted",
+    "U8-R1 MEASURE_PASS: protocol SHA f88f6db7; mapping table empty; LM_CHECKPOINT_CONTEXT_MISMATCH"
   ]
 }
