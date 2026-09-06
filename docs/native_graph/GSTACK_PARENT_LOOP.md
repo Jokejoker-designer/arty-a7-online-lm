@@ -34,7 +34,7 @@ force-push, identity invention (CLASS_ID as NID / LM token / first member).
 
 ## Current lake
 
-U8-R3 XSim PASS (structural). P1 `U5Q-M10-TYPECLASS-SCALE-00` HOST_MODEL PASS.
-Next close-critical: `U6T-TYPECLASS-HEAP-TIMING-00`.
+U6Q OOC PASS. P3 LIMIT / P4 persist / P5 close-path Root-B / P6 rtl glue PASS.
+Next: P7 unified SoC XSim **BLOCKED** (MIG dirty). Not U8R/U9/PROGRAM.
 Do not program `1F0F2ABB`. PROGRAM only at U10 on a new unique bit.
 Semantic LM claim remains MISMATCH until a new checkpoint exists.

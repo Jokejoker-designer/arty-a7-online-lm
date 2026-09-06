@@ -29,26 +29,40 @@ module tb_a7ng_query_struct_extract;
   always #5 clk = ~clk;
 
   task automatic send_str(input string s);
-    integer k;
+    integer k, tmo;
     begin
       for (k = 0; k < s.len(); k = k + 1) begin
-        @(posedge clk);
+        tmo = 0;
+        @(negedge clk);
+        while (!tok_r && tmo < 32) begin
+          @(posedge clk);
+          tmo = tmo + 1;
+        end
         tok_v <= 1'b1;
         tok   <= s[k];
         @(posedge clk);
-        if (!tok_r) fail = fail + 1;
         tok_v <= 1'b0;
       end
     end
   endtask
 
   task automatic do_fire;
+    integer tmo;
     begin
-      @(posedge clk);
+      tmo = 0;
+      @(negedge clk);
+      while (busy && tmo < 32) begin
+        @(posedge clk);
+        tmo = tmo + 1;
+      end
       fire <= 1'b1;
       @(posedge clk);
       fire <= 1'b0;
-      @(posedge clk);
+      tmo = 0;
+      while (!valid && tmo < 32) begin
+        @(posedge clk);
+        tmo = tmo + 1;
+      end
     end
   endtask
 

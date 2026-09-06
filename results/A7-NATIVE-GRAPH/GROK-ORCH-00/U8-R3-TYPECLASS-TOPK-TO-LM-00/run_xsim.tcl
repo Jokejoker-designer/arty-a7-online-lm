@@ -25,7 +25,7 @@ set src [list \
   [file join $root rtl/native_graph/learn/a7ng_learned_prior_store.sv] \
   [file join $root rtl/native_graph/integrate/a7ng_u7_contextual_rank.sv] \
   [file join $root rtl/native_graph/lm/a7ng_lm_ctx_encoder_v1.sv] \
-  [file join $bag a7ng_lm_ctx_fwd_v1.sv] \
+  [file join $root rtl/native_graph/lm/a7ng_lm_ctx_fwd_v1.sv] \
   [file join $root rtl/lm/a7lm06_pkg.sv] \
   [file join $root rtl/lm/isqrt32.sv] \
   [file join $root rtl/lm/floordiv_s48.sv] \

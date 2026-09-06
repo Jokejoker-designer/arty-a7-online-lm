@@ -173,6 +173,7 @@ module tb_u6_typeclass_retrieval;
       @(posedge clk);
       for (bi = 0; bi < U6_QLEN[q]; bi = bi + 1) begin
         @(posedge clk);
+        while (!tok_r) @(posedge clk);
         tok_v <= 1; tok <= U6_QBYTES[q][8*bi +: 8];
         @(posedge clk); tok_v <= 0;
       end
