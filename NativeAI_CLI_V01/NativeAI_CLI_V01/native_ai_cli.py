@@ -9,7 +9,7 @@ from datetime import datetime
 from pathlib import Path
 
 APP = "Native AI V3.1 Development Console"
-VERSION = "0.2.10"
+VERSION = "0.2.11"
 
 RESET = "\033[0m"
 BOLD = "\033[1m"
@@ -238,8 +238,8 @@ def uart_backend(text):
     return {
         "source": "UART_ADAPTER_LOCKED",
         "error": (
-            "UART chat is locked until an authorized bit/LM chain exists. "
-            "U6B substrate PASS is not U6 TYPE_CLASS silicon. BIT=NO PROGRAM=NO."
+            "UART chat is locked until U10 READY_TO_PROGRAM on a NEW unique final bit. "
+            "U8-R3 is XSim only. Do not reseat 1F0F2ABB as Native-AI close. BIT=NO PROGRAM=NO."
         ),
     }
 
