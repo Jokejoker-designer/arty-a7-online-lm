@@ -1,12 +1,13 @@
 let meta = #{
     name: "blueprint-gate-loop",
-    description: "gstack parent loop: implement next Native V1 gate, independent qa-only audit, one causal patch, never BIT/PROGRAM",
-    when_to_use: "Auto-dispatch the frozen master blueprint lake with implement then independent acceptance auditor",
+    description: "gstack parent: auto-dispatch next Native V1 lakes, independent qa-only audit, one causal patch, never BIT/PROGRAM",
+    when_to_use: "Owner said the DAG is already planned. Run implement then independent nghiem-thu auditor in a loop. Do not ask mid-lake.",
     phases: [
-        #{ title: "Identify", detail: "confirm next lake from HEAD and owner DAG" },
-        #{ title: "Implement", detail: "one FPGA-owned gate, no overclaim" },
+        #{ title: "Identify", detail: "next lake from CLOSE_NATIVE_V1_DAG, never invent" },
+        #{ title: "Implement", detail: "one FPGA-owned gate" },
         #{ title: "Audit", detail: "independent qa-only: FAIL, overclaim, fraud, logic" },
         #{ title: "Repair", detail: "one causal patch then re-audit" },
+        #{ title: "Advance", detail: "next lake or hard-stop" },
     ],
 };
 
@@ -21,6 +22,7 @@ let impl_schema = #{
         "blocked_reason": #{ "type": "string" },
         "head": #{ "type": "string" },
         "xsim": #{ "type": "string" },
+        "next_gate": #{ "type": "string" },
     },
 };
 
@@ -44,209 +46,254 @@ fn as_str(x) {
     return "";
 }
 
-let gate = "U8-R3";
-if args != () && args.gate != () {
-    gate = args.gate;
+fn is_hard_stop_gate(g) {
+    if g == "U9S" { return true; }
+    if g == "U9I" { return true; }
+    if g == "U9P-PREPROGRAM-CLOSURE-00" { return true; }
+    if g == "U10" { return true; }
+    if g == "P11" { return true; }
+    if g == "P12" { return true; }
+    if g == "P13" { return true; }
+    if g == "P14" { return true; }
+    return false;
 }
 
 let root = "D:/Jetking_sem4/SEM_4/arty-a7-online-lm-g14-preboard-00";
-let bag_r3 = root + "/results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-R3-TYPECLASS-TOPK-TO-LM-00";
+let skill = root + "/.agents/skills/gstack-acceptance-auditor/SKILL.md";
+let dag = root + "/docs/native_graph/CLOSE_NATIVE_V1_DAG.md";
 
-let hard = "HARD STOPS (never violate): BIT=NO PROGRAM=NO REPROGRAM_AGAIN=NO QHEAD=NO HOLD_A_ORACLE_RETARGET=NO. ";
-hard += "Do not force-push. Do not rewind to 2d3f3e4. Do not invent CLASS_ID as NID or as an LM token. ";
-hard += "Do not pick first-member. Do not retarget HOLD_A OUT 653/689/237/60. ";
-hard += "Semantic LM claim remains LM_CHECKPOINT_CONTEXT_MISMATCH. Do not auto-open U8R or U9. ";
-hard += "Do not use #20_000_000_000 delays (32-bit overflow). Use a cycle watchdog.";
-
-phase("Identify");
-log("Parent lake: " + gate + " (gstack analog: /autoplan coordinator)");
-
-let idp = "You are the gstack identify scout (read-only). Repo " + root + " branch grok-orch/v31-canonical-00. ";
-idp += "Use git log, read_file, and grep. Do not implement. Do not edit files. ";
-idp += "Read: git HEAD; results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-R2-LM-CONTEXT-ENCODER-V1-00/CLOSEOUT.md; ";
-idp += "docs/native_graph/GSTACK_PARENT_LOOP.md; UNIFIED_NATIVE_AI_FINAL_BLUEPRINT if present. ";
-idp += "Expected: HEAD is 2a3bca3 or a descendant of U8-R2 d29153e. Next owner lake is U8-R3. ";
-idp += "If HEAD is an ancestor of U8-R2, status=BLOCKED (rewind forbidden). ";
-idp += "Return status PASS, gate U8-R3, bag path of the U8-R2 closeout, summary of why R3 is next. ";
-idp += hard;
-let idr = agent(idp, #{
-    label: "identify",
-    capability_mode: "read-only",
-    output_schema: impl_schema,
-});
-if idr == () || !idr.success {
-    complete(#{ status: "BLOCKED", reason: "identify failed" });
+let max_gates = 2;
+if args != () && args.max_gates != () {
+    max_gates = args.max_gates;
 }
-let id_status = "";
-if idr.output != () { id_status = as_str(idr.output.status); }
-if id_status == "BLOCKED" {
-    complete(#{
-        status: "BLOCKED",
-        gate: gate,
-        reason: as_str(idr.output.blocked_reason),
-        summary: as_str(idr.output.summary),
+
+let start_gate = "U8-SOC-ROOTB-WDMA-00";
+if args != () && args.start_gate != () {
+    start_gate = args.start_gate;
+}
+
+let hard = "HARD STOPS: BIT=NO PROGRAM=NO REPROGRAM_AGAIN=NO QHEAD=NO HOLD_A_ORACLE_RETARGET=NO. ";
+hard += "Never reseat 1F0F2ABB/9CA2B30D/F24150BD/3A7EF204 as the close bit. ";
+hard += "Never force-push. Never invent CLASS_ID as NID or as an LM token. Never first-member. ";
+hard += "Never retarget HOLD_A OUT 653/689/237/60. Semantic LM stays LM_CHECKPOINT_CONTEXT_MISMATCH. ";
+hard += "Do not auto-open U9S/U9I/U9P/U10. Do not declare BOARD_PASS or GATE14_PASS. ";
+hard += "Do not git add MIG or a7lm06_wmem.hex. Cycle watchdog, not ns overflow. ";
+hard += "TRUTH > PROGRESS. Stop at first divergence. Do not ask the owner mid-lake; the DAG is already locked.";
+
+let lakes = [];
+let round = 0;
+let current = start_gate;
+
+while round < max_gates {
+    round += 1;
+    phase("Identify");
+    log("gstack /autoplan analog. Round " + round.to_string() + " proposed=" + current);
+
+    let idp = "You are the gstack identify scout (read-only). NEVER edit files. ";
+    idp += "Repo " + root + " branch grok-orch/v31-canonical-00. ";
+    idp += "MUST use git log, read_file, grep. Do not answer from memory. ";
+    idp += "Read: " + dag + " ; docs/native_graph/GSTACK_PARENT_LOOP.md ; ";
+    idp += "results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-SOC-ROOTB-WDMA-00/PREREG.md if present; ";
+    idp += "results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-UNIFIED-SOC-XSIM-00/CLOSEOUT.md if present. ";
+    idp += "Proposed start_gate=" + current + ". Confirm the true NEXT lake from the DAG. ";
+    idp += "If the proposed gate is already PASS, return the following lake in next_gate. ";
+    idp += "If next lake is U9S/U9I/U9P/U10/P11/P12/P13/P14 or needs BIT/PROGRAM, status=BLOCKED. ";
+    idp += "Allowed auto lakes: U8-SOC-ROOTB-WDMA-00, U8R-REMOVE-SYNTHETIC-PRODUCTION, ";
+    idp += "U9-FINAL-SOURCE-FREEZE-00 (freeze docs only, no bit), U9R-FINAL-REGRESSION-00 (XSim only). ";
+    idp += "Return status PASS or BLOCKED, gate=the lake to run now, bag=absolute bag dir, next_gate, summary. ";
+    idp += hard;
+    let idr = agent(idp, #{
+        label: "identify-r" + round.to_string(),
+        capability_mode: "read-only",
+        output_schema: impl_schema,
     });
-}
+    if idr == () || !idr.success {
+        complete(#{ status: "BLOCKED", reason: "identify failed", round: round, lakes: lakes });
+    }
+    let id_status = "";
+    let gate = current;
+    let bag = root + "/results/A7-NATIVE-GRAPH/GROK-ORCH-00/" + current;
+    if idr.output != () {
+        id_status = as_str(idr.output.status);
+        if as_str(idr.output.gate) != "" { gate = as_str(idr.output.gate); }
+        if as_str(idr.output.bag) != "" { bag = as_str(idr.output.bag); }
+    }
+    if id_status == "BLOCKED" || is_hard_stop_gate(gate) {
+        complete(#{
+            status: "BLOCKED",
+            gate: gate,
+            reason: as_str(idr.output.blocked_reason),
+            summary: as_str(idr.output.summary),
+            lakes: lakes,
+            note: "Parent stopped before BIT/PROGRAM. Owner DAG remains.",
+        });
+    }
 
-phase("Implement");
-log("Implementer (gstack /plan-eng-review then eng). Isolation: shared worktree, no worktree fork.");
+    phase("Implement");
+    log("gstack eng analog. Implement " + gate + " one unknown.");
 
-let ip = "You are the gstack implementer for Native V1 on Digilent Arty A7. ";
-ip += "Worktree: " + root + " . Branch grok-orch/v31-canonical-00. ";
-ip += "Execute ONE lake only: " + gate + " = U8-R3-TYPECLASS-TOPK-TO-LM-00. ";
-ip += "MUST use tools: read_file, grep, list_dir, run_terminal_command. Do not answer from memory. ";
-ip += "READ FIRST: U8-R2 CLOSEOUT, rtl/native_graph/lm/a7ng_lm_ctx_encoder_v1.sv, ";
-ip += "rtl/native_graph/lm/a7ng_native_ctx_bind.sv, U8-R0 tb_u8_r0.sv and run_xsim.tcl, ";
-ip += "U8-R2 tb_u8_r2.sv and run_xsim.tcl, .agents/skills/gstack-acceptance-auditor/SKILL.md. ";
-ip += "GOAL: ranked TYPE_CLASS CLASS_ID heap (U7 ranking DUT or equivalent FPGA CLASS_ID vector) ";
-ip += "-> a7ng_lm_ctx_encoder_v1 -> ctx_we beats of eid,iid,rid,xid tokens -> exactly one start_fwd ";
-ip += "-> LM-06 SIM_FULL -> exactly one done. Host n_host_tok/w/win/addr must stay 0. ";
-ip += "Encoder stream is rank-order [eid,iid,rid,xid] per valid CLASS_ID 1..443. Never serialize CLASS_ID or CLASS_ID[7:0]. ";
-ip += "Do not reuse a7ng_native_ctx_bind global_id low8 packing for CLASS_ID. That path is NID-era. ";
-ip += "Reuse encoder module as-is if SHA still matches U8-R2; write a new TB + optional glue, not a new encoder law. ";
-ip += "XSim via C:/2026.1/Vivado/bin xvlog/xelab/xsim like U8-R2 run_xsim.tcl. Cycle watchdog, not ns overflow. ";
-ip += "Bag: " + bag_r3 + " with PREREG.md LOCK.txt RESULTS.md CLOSEOUT.md METRICS.json SHA256.txt tb run_xsim.tcl xsim.log. ";
-ip += "CLOSEOUT must say SEMANTIC_LM_CLAIM=NO CLASS=LM_CHECKPOINT_CONTEXT_MISMATCH BIT=NO PROGRAM=NO QHEAD=NO. ";
-ip += "Do not claim LM understands TYPE_CLASS. Do not claim silicon/Gate14/OUT=653. ";
-ip += "Do not git add MIG/vivado/ip. Do not commit a7lm06_wmem.hex. Do not force-push. ";
-ip += "If blocked by missing ranking CLASS_ID ports, status=BLOCKED with blocked_reason; do not invent IDs. ";
-ip += hard;
-ip += " Return JSON status PASS FAIL or BLOCKED, gate, bag absolute path, summary, xsim PASS/FAIL line.";
-let impl = agent(ip, #{
-    label: "implement:" + gate,
-    capability_mode: "all",
-    output_schema: impl_schema,
-});
-if impl == () || !impl.success {
-    complete(#{ status: "BLOCKED", reason: "implementer failed to return schema" });
-}
-
-let impl_status = "";
-let impl_bag = bag_r3;
-if impl.output != () {
-    impl_status = as_str(impl.output.status);
-    if as_str(impl.output.bag) != "" { impl_bag = as_str(impl.output.bag); }
-}
-if impl_status == "BLOCKED" {
-    complete(#{
-        status: "BLOCKED",
-        gate: gate,
-        reason: as_str(impl.output.blocked_reason),
-        summary: as_str(impl.output.summary),
-        bag: impl_bag,
+    let ip = "You are the gstack implementer for Native V1 on Digilent Arty A7-100T. ";
+    ip += "Worktree: " + root + " . Branch grok-orch/v31-canonical-00. ";
+    ip += "Execute ONE lake only: " + gate + ". Bag dir: " + bag + " . ";
+    ip += "MUST use read_file, grep, list_dir, run_terminal_command, search_replace. Do not answer from memory. ";
+    ip += "READ FIRST: " + dag + " ; " + bag + "/PREREG.md ; " + skill + " ; ";
+    ip += "GROK_CONTINUOUS_EXECUTION_PROMPT_V3_1.md hard stops; a7-fpga-gate and a7-native-graph-gate skills. ";
+    ip += "XSim via C:/2026.1/Vivado/bin xvlog/xelab/xsim. License D:\\Xilinx\\licenses\\vivado_basic.lic. ";
+    ip += "Write PREREG LOCK RESULTS CLOSEOUT METRICS ACCEPTANCE is auditor-owned. SHA256 of edited RTL. ";
+    ip += "CLOSEOUT must not claim silicon, Gate14, BOARD_PASS, OUT=653, or LM understands TYPE_CLASS. ";
+    ip += "If the unknown is WDMA/Root-B: prove ACK iff one commit on stall/reset/overflow/flush-reload, ";
+    ip += "or FAIL honestly that SoC WDMA remains OPEN_AUDIT. Do not relabel OPEN_AUDIT as PASS. ";
+    ip += "If the lake is U8R: remove synthetic/NID bind from production path only after Root-B bag exists; ";
+    ip += "keep sim fixtures. One retrieval engine. Regression on production path. ";
+    ip += "Do not instantiate MIG churn. Do not program. ";
+    ip += hard;
+    ip += " Return JSON status PASS FAIL or BLOCKED, gate, bag absolute path, summary, xsim line.";
+    let impl = agent(ip, #{
+        label: "implement:" + gate,
+        capability_mode: "all",
+        output_schema: impl_schema,
     });
-}
+    if impl == () || !impl.success {
+        complete(#{ status: "BLOCKED", reason: "implementer failed schema", gate: gate, lakes: lakes });
+    }
+    let impl_status = "";
+    let impl_bag = bag;
+    if impl.output != () {
+        impl_status = as_str(impl.output.status);
+        if as_str(impl.output.bag) != "" { impl_bag = as_str(impl.output.bag); }
+    }
+    if impl_status == "BLOCKED" {
+        lakes.push(#{ gate: gate, status: "BLOCKED", bag: impl_bag, summary: as_str(impl.output.summary) });
+        complete(#{ status: "BLOCKED", gate: gate, lakes: lakes, impl: impl.output });
+    }
 
-phase("Audit");
-log("Independent auditor (gstack /qa-only analog). Report-only. Never patches.");
+    phase("Audit");
+    log("gstack /qa-only analog. Independent nghiem-thu. Never patches.");
 
-let ap = "You are the independent gstack acceptance auditor (qa-only). NEVER patch RTL, TB, or CLOSEOUT claims. ";
-ap += "Repo " + root + ". Gate " + gate + ". Bag " + impl_bag + ". ";
-ap += "Read skill D:/Jetking_sem4/SEM_4/arty-a7-online-lm-g14-preboard-00/.agents/skills/gstack-acceptance-auditor/SKILL.md. ";
-ap += "MUST use read_file and grep on: CLOSEOUT.md RESULTS.md xsim.log SHA256.txt encoder RTL ranking/glue RTL TB. ";
-ap += "Fail closed if xsim.log missing, SHA missing, or a PASS is asserted without a matching log line. ";
-ap += "Hunt: FAIL hidden as PASS; overclaim (silicon, Gate14, Q-head, NLU, OUT=653 on untrained path, LM understands TYPE_CLASS); ";
-ap += "fraud (TB inspects CLASS_ID to pick reward, host builds learn key, first-member); ";
-ap += "logic (lookup after heap, CLASS_ID stuffed as LM token, low8 CLASS_ID, NID as CLASS_ID, host counters nonzero); ";
-ap += "BIT/PROGRAM/QHEAD performed; history rewrite. ";
-ap += "Write ACCEPTANCE.md in the bag only. Do not edit RTL. ";
-ap += "verdict PASS FAIL BLOCKED or OVERCLAIM. overclaim=true if CLOSEOUT claims more than xsim.log supports. ";
-ap += "fraud=true if TB cheats. logic_bug=true if CLASS_ID used as token or bind still packs global_id low8 as the R3 stream. ";
-ap += hard;
-let aud = agent(ap, #{
-    label: "audit:" + gate,
-    capability_mode: "read-only",
-    output_schema: audit_schema,
-});
-if aud == () || !aud.success {
-    complete(#{ status: "BLOCKED", reason: "auditor failed", impl: impl.output });
-}
-
-let v = "";
-let oc = false;
-let fr = false;
-if aud.output != () {
-    v = as_str(aud.output.verdict);
-    if aud.output.overclaim == true { oc = true; }
-    if aud.output.fraud == true { fr = true; }
-}
-log("Auditor verdict=" + v);
-
-if v == "PASS" && oc == false && fr == false {
-    complete(#{
-        status: "PASS",
-        gate: gate,
-        bag: impl_bag,
-        audit: aud.output,
-        next: "Do not auto-open U8R or U9. BIT=NO PROGRAM=NO.",
+    let ap = "You are the independent gstack acceptance auditor (qa-only / nghiem-thu). ";
+    ap += "NEVER patch RTL, TB, or CLOSEOUT claims. NEVER soften FAIL to keep the DAG moving. ";
+    ap += "Repo " + root + ". Gate " + gate + ". Bag " + impl_bag + ". ";
+    ap += "Read skill " + skill + " in full. Analog: E:/agents/gstack/qa-only (report only). ";
+    ap += "MUST use read_file and grep on CLOSEOUT.md RESULTS.md xsim.log SHA256.txt RTL TB. ";
+    ap += "Fail closed if xsim.log missing, SHA missing, or PASS asserted without a matching log marker. ";
+    ap += "Hunt FAIL hidden as PASS; overclaim (silicon, Gate14, Q-head, NLU, OUT=653, LM understands TYPE_CLASS, ";
+    ap += "SoC top instantiated when it was not, WDMA ACK=commit when only store XSim ran); ";
+    ap += "fraud (TB inspects CLASS_ID to pick reward, host builds learn key, first-member); ";
+    ap += "logic (lookup after heap, CLASS_ID as LM token, low8 CLASS_ID, NID bind on TYPE_CLASS path, host counters nonzero); ";
+    ap += "BIT/PROGRAM/QHEAD performed; history rewrite. ";
+    ap += "Write ACCEPTANCE.md in the bag only. verdict PASS FAIL BLOCKED or OVERCLAIM. ";
+    ap += "overclaim=true if CLOSEOUT claims more than the log supports. fraud=true if TB cheats. ";
+    ap += "logic_bug=true if CLASS_ID used as token or native_ctx_bind packs global_id low8 as the TYPE_CLASS stream. ";
+    ap += hard;
+    let aud = agent(ap, #{
+        label: "audit:" + gate,
+        capability_mode: "read-only",
+        output_schema: audit_schema,
     });
-}
-if v == "BLOCKED" {
-    complete(#{ status: "BLOCKED", gate: gate, audit: aud.output, impl: impl.output });
-}
+    if aud == () || !aud.success {
+        complete(#{ status: "BLOCKED", reason: "auditor failed", gate: gate, impl: impl.output, lakes: lakes });
+    }
+    let v = "";
+    let oc = false;
+    let fr = false;
+    let lb = false;
+    if aud.output != () {
+        v = as_str(aud.output.verdict);
+        if aud.output.overclaim == true { oc = true; }
+        if aud.output.fraud == true { fr = true; }
+        if aud.output.logic_bug == true { lb = true; }
+    }
+    log("Auditor verdict=" + v + " overclaim=" + oc.to_string());
 
-phase("Repair");
-log("One causal patch then re-audit. Auditor still never patches.");
+    let lake_ok = (v == "PASS" && oc == false && fr == false && lb == false);
+    if !lake_ok && v != "BLOCKED" {
+        phase("Repair");
+        log("One causal patch. Auditor never patches. gstack /review auto-fix analog then re-QA.");
+        let rp = "You are the gstack patch implementer. ONE causal fix only. Stop at first divergence. ";
+        rp += "Repo " + root + ". Gate " + gate + ". Bag " + impl_bag + ". ";
+        rp += "MUST use read_file grep run_terminal_command. Do not answer from memory. ";
+        rp += "Auditor verdict: " + v + ". first_divergence: " + as_str(aud.output.first_divergence) + ". ";
+        rp += "fix_hint: " + as_str(aud.output.fix_hint) + ". evidence: " + as_str(aud.output.evidence) + ". ";
+        rp += "Fix only that divergence. Re-run XSim. Update CLOSEOUT honestly. Do not relabel FAIL as PASS. ";
+        rp += "Do not expand to U9S/PROGRAM. " + hard;
+        let fix = agent(rp, #{
+            label: "patch:" + gate,
+            capability_mode: "all",
+            output_schema: impl_schema,
+        });
+        if fix == () || !fix.success {
+            complete(#{ status: "FAIL", reason: "patch agent failed", gate: gate, audit: aud.output, lakes: lakes });
+        }
+        let fix_bag = impl_bag;
+        if fix.output != () && as_str(fix.output.bag) != "" {
+            fix_bag = as_str(fix.output.bag);
+        }
+        let ap2 = "Independent re-audit after one patch. NEVER patch. qa-only. Repo " + root + ". ";
+        ap2 += "Bag " + fix_bag + ". Read new xsim.log CLOSEOUT. Fail closed if log missing. ";
+        ap2 += "Same hunt: FAIL-as-PASS, overclaim, fraud, CLASS_ID-as-token, BIT/PROGRAM, WDMA overclaim. ";
+        ap2 += "Write ACCEPTANCE.md. " + hard;
+        let aud2 = agent(ap2, #{
+            label: "reaudit:" + gate,
+            capability_mode: "read-only",
+            output_schema: audit_schema,
+        });
+        if aud2 == () || !aud2.success {
+            complete(#{ status: "FAIL", reason: "reaudit failed", gate: gate, lakes: lakes });
+        }
+        let v2 = "";
+        let oc2 = false;
+        let fr2 = false;
+        let lb2 = false;
+        if aud2.output != () {
+            v2 = as_str(aud2.output.verdict);
+            if aud2.output.overclaim == true { oc2 = true; }
+            if aud2.output.fraud == true { fr2 = true; }
+            if aud2.output.logic_bug == true { lb2 = true; }
+        }
+        lake_ok = (v2 == "PASS" && oc2 == false && fr2 == false && lb2 == false);
+        impl_bag = fix_bag;
+        if !lake_ok {
+            lakes.push(#{ gate: gate, status: "FAIL", bag: impl_bag, verdict: v2 });
+            complete(#{
+                status: "FAIL",
+                gate: gate,
+                first_audit: aud.output,
+                reaudit: aud2.output,
+                lakes: lakes,
+                note: "Stopped after one repair round. Parent must not invent a second causal patch or open BIT.",
+            });
+        }
+        lakes.push(#{ gate: gate, status: "PASS_AFTER_PATCH", bag: impl_bag });
+    } else if v == "BLOCKED" {
+        lakes.push(#{ gate: gate, status: "BLOCKED", bag: impl_bag, audit: aud.output });
+        complete(#{ status: "BLOCKED", gate: gate, audit: aud.output, lakes: lakes });
+    } else if lake_ok {
+        lakes.push(#{ gate: gate, status: "PASS", bag: impl_bag, summary: as_str(impl.output.summary) });
+    } else {
+        lakes.push(#{ gate: gate, status: v, bag: impl_bag });
+        complete(#{ status: v, gate: gate, audit: aud.output, lakes: lakes });
+    }
 
-let rp = "You are the gstack patch implementer. ONE causal fix only. Stop at first divergence. ";
-rp += "Repo " + root + ". Gate " + gate + ". Bag " + impl_bag + ". ";
-rp += "MUST use read_file grep run_terminal_command. Do not answer from memory. ";
-rp += "Auditor verdict: " + v + ". ";
-rp += "first_divergence: " + as_str(aud.output.first_divergence) + ". ";
-rp += "fix_hint: " + as_str(aud.output.fix_hint) + ". ";
-rp += "evidence: " + as_str(aud.output.evidence) + ". ";
-rp += "Fix only that divergence. Re-run XSim. Update CLOSEOUT honestly (do not relabel FAIL as PASS). ";
-rp += "Do not expand scope to U8R/U9. " + hard;
-let fix = agent(rp, #{
-    label: "patch:" + gate,
-    capability_mode: "all",
-    output_schema: impl_schema,
-});
-if fix == () || !fix.success {
-    complete(#{ status: "FAIL", reason: "patch agent failed", audit: aud.output });
-}
-
-let fix_bag = impl_bag;
-if fix.output != () && as_str(fix.output.bag) != "" {
-    fix_bag = as_str(fix.output.bag);
-}
-
-let ap2 = "Independent re-audit after one patch. NEVER patch. qa-only. Repo " + root + ". ";
-ap2 += "Bag " + fix_bag + ". Read new xsim.log CLOSEOUT ACCEPTANCE. Fail closed if log missing. ";
-ap2 += "Same hunt as first audit: FAIL-as-PASS, overclaim, fraud, CLASS_ID-as-token, BIT/PROGRAM. ";
-ap2 += "Write ACCEPTANCE.md. " + hard;
-let aud2 = agent(ap2, #{
-    label: "reaudit:" + gate,
-    capability_mode: "read-only",
-    output_schema: audit_schema,
-});
-if aud2 == () || !aud2.success {
-    complete(#{ status: "FAIL", reason: "reaudit failed", patch: fix.output, first_audit: aud.output });
-}
-
-let v2 = "";
-let oc2 = false;
-let fr2 = false;
-if aud2.output != () {
-    v2 = as_str(aud2.output.verdict);
-    if aud2.output.overclaim == true { oc2 = true; }
-    if aud2.output.fraud == true { fr2 = true; }
-}
-
-if v2 == "PASS" && oc2 == false && fr2 == false {
-    complete(#{
-        status: "PASS_AFTER_PATCH",
-        gate: gate,
-        bag: fix_bag,
-        first_audit: aud.output,
-        reaudit: aud2.output,
-    });
+    phase("Advance");
+    let nxt = as_str(idr.output.next_gate);
+    if nxt == "" { nxt = "STOP"; }
+    if is_hard_stop_gate(nxt) {
+        complete(#{
+            status: "PASS",
+            lakes: lakes,
+            next: nxt,
+            note: "Next lake is BIT/PROGRAM class. Parent stops. Owner must authorize U9P separately.",
+        });
+    }
+    current = nxt;
+    if current == "STOP" {
+        complete(#{ status: "PASS", lakes: lakes, note: "Identify did not name a further auto lake." });
+    }
 }
 
 complete(#{
-    status: "FAIL",
-    gate: gate,
-    first_audit: aud.output,
-    reaudit: aud2.output,
-    note: "Stopped after one repair round. Do not invent a second causal patch. Parent must not open U8R/U9.",
+    status: "PASS",
+    lakes: lakes,
+    rounds: round,
+    note: "Hit max_gates. Re-run /blueprint-gate-loop with the next start_gate. BIT=NO PROGRAM=NO.",
 });

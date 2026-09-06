@@ -22,7 +22,7 @@ gstack source analog: `/qa-only` in https://github.com/garrytan/gstack
 ## Hunt
 
 - FAIL hidden as PASS
-- Overclaim (silicon, Gate14, Q-head, generalization, NLU, OUT=653 on untrained path, "LM understands TYPE_CLASS")
+- Overclaim (silicon, Gate14, Q-head, generalization, NLU, OUT=653 on untrained path, "LM understands TYPE_CLASS", SoC top instantiated when only `a7ng_typeclass_soc_chain` ran, WDMA ACK=commit when only store XSim ran)
 - Fraud (TB inspects CLASS_ID to pick reward, host builds learn key)
 - Logic bugs (lookup after heap, CLASS_ID stuffed as LM token, CLASS_ID[7:0], first-member, NID-era `global_id` low8 used as R3 stream)
 - BIT/PROGRAM/QHEAD performed when forbidden
