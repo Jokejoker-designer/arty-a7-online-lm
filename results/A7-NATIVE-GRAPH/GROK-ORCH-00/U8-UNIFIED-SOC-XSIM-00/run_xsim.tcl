@@ -22,6 +22,7 @@ set src [list \
   [file join $root rtl/native_graph/integrate/a7ng_u6_typeclass_retrieval.sv] \
   [file join $root rtl/native_graph/lm/a7ng_lm_ctx_encoder_v1.sv] \
   [file join $root rtl/native_graph/lm/a7ng_lm_ctx_fwd_v1.sv] \
+  [file join $root rtl/native_graph/integrate/a7ng_prod_tc_lm.sv] \
   [file join $root rtl/native_graph/integrate/a7ng_typeclass_soc_chain.sv] \
   [file join $root rtl/lm/a7lm06_pkg.sv] \
   [file join $root rtl/lm/isqrt32.sv] \

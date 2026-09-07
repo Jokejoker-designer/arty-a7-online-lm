@@ -21,7 +21,8 @@ P8  U8R-REMOVE-SYNTHETIC-PRODUCTION PASS (soc_top SYNTHETIC_CAND_GEN=0; fixture 
 P9  U9-FINAL-SOURCE-FREEZE-00 PASS (docs/manifest; FINAL_SOURCE_COMMIT=bdddbd68; no bit)
 P10 U9R-FINAL-REGRESSION-00 FAIL (R2 QUERY_NO_SNAPSHOT; bag immutable)
 C03 C03-QUERY-PENDING-SNAPSHOT-SOURCE-00 PASS (parent snap+pending; cand off)
-     NEXT = C02 INTEGRATION_GAP (soc_top UART→QSE→TYPE_CLASS) — not U9S
+C02 C02-PRODUCTION-PATH-INTEGRATION-00 PASS (ab_core u_tc; UART soc_top still GAP)
+     NEXT = C02 residual UART→tc_tok on soc_top, or C04 — not U9S
 P11 U9S / U9I  (NEW unique bit SHA)
 P12 U9P-PREPROGRAM-CLOSURE-00
 P13 U10 program ONCE + blind exam (HOLD_A 653 unchanged)
