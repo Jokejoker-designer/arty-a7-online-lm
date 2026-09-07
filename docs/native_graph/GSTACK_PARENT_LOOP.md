@@ -38,5 +38,6 @@ reseat `1F0F2ABB`.
 
 ## Current lake
 
-P7b SLICE_XSIM_PASS. P8 U8R cand_* off on soc_top C9. Next: U9 freeze docs.
-Not U9S/PROGRAM. native_ctx_bind still in ab_core.
+P9 U9-FINAL-SOURCE-FREEZE-00 PASS (docs/manifest; FINAL_SOURCE_COMMIT=bdddbd68).
+Next: U9R-FINAL-REGRESSION-00. Not U9S/PROGRAM. native_ctx_bind still in ab_core.
+SoC WDMA dest still OPEN_AUDIT (unwired).

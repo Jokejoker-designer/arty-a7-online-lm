@@ -15,9 +15,8 @@ P6  U8-R3B-PRODUCTION-GLUE-00 PASS (rtl glue SHA match; U8-R3 XSim PASS; pred=86
 P7  U8-UNIFIED-SOC-XSIM-00 PASS (raw query→U6→fwd→LM; ENC==CTX; pred=861; SoC top NOT inst)
 P7b U8-SOC-ROOTB-WDMA-00 PASS (slice XSim; m_go_ready; not full SoC)
 P8  U8R-REMOVE-SYNTHETIC-PRODUCTION PASS (soc_top SYNTHETIC_CAND_GEN=0; fixture default 1)
-P9  U9-FINAL-SOURCE-FREEZE-00      ← NEXT (docs/manifest only; dirty tree STOP; no bit)
-P9  U9-FINAL-SOURCE-FREEZE-00
-P10 U9R-FINAL-REGRESSION-00
+P9  U9-FINAL-SOURCE-FREEZE-00 PASS (docs/manifest; FINAL_SOURCE_COMMIT=bdddbd68; no bit)
+P10 U9R-FINAL-REGRESSION-00      ← NEXT
 P11 U9S / U9I  (NEW unique bit SHA)
 P12 U9P-PREPROGRAM-CLOSURE-00
 P13 U10 program ONCE + blind exam (HOLD_A 653 unchanged)
