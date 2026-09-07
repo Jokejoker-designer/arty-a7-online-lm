@@ -134,8 +134,10 @@ module a7ng_g1g5_cofit #(
   assign c10_lmdn_o          = g_lmdn;
   assign c10_out_o           = g_out;
 
-  assign qv_to_graph = SYNTHETIC_CAND_GEN ? p_qv : 1'b0;
-  assign p_qr        = SYNTHETIC_CAND_GEN ? graph_qr : 1'b1;
+  logic ext_complete;
+  assign qv_to_graph  = SYNTHETIC_CAND_GEN ? p_qv : 1'b0;
+  assign ext_complete = (!SYNTHETIC_CAND_GEN) && p_qv && graph_topk_valid_i;
+  assign p_qr         = graph_qr;
 
   always_comb begin
     for (gpi = 0; gpi < 8; gpi = gpi + 1) begin
@@ -153,6 +155,7 @@ module a7ng_g1g5_cofit #(
   a7ng_learned_prior_graph #(.WRAP_LIMIT(32'd6)) u_graph (
     .clk(clk), .rst_n(rst_n), .learn_i(p_learn), .freeze_i(p_freeze),
     .query_valid_i(qv_to_graph), .query_ready_o(graph_qr), .query_id_i(p_qid),
+    .ext_complete_i(ext_complete), .ext_id_i(graph_id_i), .ext_sc_i(graph_sc_i),
     .snap_valid_o(p_sv), .snap_ready_i(p_sr),
     .topk_id_o(p_id), .topk_score_o(p_sc),
     .c3_pack_o(c3p), .c9_pack_o(c9p),
