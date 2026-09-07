@@ -1,6 +1,9 @@
 # Close Native AI V1 — DAG (Blueprint V3.1)
 
 Authority: `UNIFIED_NATIVE_AI_FINAL_BLUEPRINT_V3_1.md`.
+Close-path design: `docs/native_graph/V31_CLOSURE_PLAN_20260907/PLAN.md` (C00–C13).
+Parent dispatch: `docs/native_graph/V31_CLOSURE_PLAN_20260907/PROMPT_GROK_U9R.md`.
+Ledger: `docs/native_graph/V31_LEDGER.md`.
 Goal (human-only): `NATIVE_V1_MINI_AI_BOARD_PASS`.
 
 ```text

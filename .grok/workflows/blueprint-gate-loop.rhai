@@ -1,7 +1,7 @@
 let meta = #{
     name: "blueprint-gate-loop",
-    description: "gstack parent: auto-dispatch next Native V1 lakes, independent qa-only audit, one causal patch, never BIT/PROGRAM",
-    when_to_use: "Owner said the DAG is already planned. Run implement then independent nghiem-thu auditor in a loop. Do not ask mid-lake.",
+    description: "V31 PLAN C00 parent: lock requested U9R, reject stale U8-R3, qa-only audit, never patch frozen RTL in same bag, never BIT/PROGRAM",
+    when_to_use: "P10/U9R per docs/native_graph/V31_CLOSURE_PLAN_20260907. Do not rewind accepted gates.",
     phases: [
         #{ title: "Identify", detail: "next lake from CLOSE_NATIVE_V1_DAG, never invent" },
         #{ title: "Implement", detail: "one FPGA-owned gate" },
@@ -58,16 +58,37 @@ fn is_hard_stop_gate(g) {
     return false;
 }
 
+fn is_stale_accepted(g) {
+    if g == "U8-R3" { return true; }
+    if g == "U8-R3-TYPECLASS-TOPK-TO-LM-00" { return true; }
+    if g == "U8R" { return true; }
+    if g == "U8R-REMOVE-SYNTHETIC-PRODUCTION" { return true; }
+    if g == "U8R-REMOVE-SYNTHETIC-PRODUCTION-00" { return true; }
+    if g == "U9" { return true; }
+    if g == "U9-FINAL-SOURCE-FREEZE-00" { return true; }
+    if g == "U8-SOC-ROOTB-WDMA-00" { return true; }
+    return false;
+}
+
+fn is_u9r(g) {
+    if g == "U9R" { return true; }
+    if g == "U9R-FINAL-REGRESSION-00" { return true; }
+    return false;
+}
+
 let root = "D:/Jetking_sem4/SEM_4/arty-a7-online-lm-g14-preboard-00";
 let skill = root + "/.agents/skills/gstack-acceptance-auditor/SKILL.md";
 let dag = root + "/docs/native_graph/CLOSE_NATIVE_V1_DAG.md";
+let plan = root + "/docs/native_graph/V31_CLOSURE_PLAN_20260907/PLAN.md";
+let u9r_prompt = root + "/docs/native_graph/V31_CLOSURE_PLAN_20260907/PROMPT_GROK_U9R.md";
+let ledger = root + "/docs/native_graph/V31_LEDGER.md";
 
-let max_gates = 2;
+let max_gates = 1;
 if args != () && args.max_gates != () {
     max_gates = args.max_gates;
 }
 
-let start_gate = "U8-SOC-ROOTB-WDMA-00";
+let start_gate = "U9R-FINAL-REGRESSION-00";
 if args != () && args.start_gate != () {
     start_gate = args.start_gate;
 }
@@ -92,14 +113,13 @@ while round < max_gates {
     let idp = "You are the gstack identify scout (read-only). NEVER edit files. ";
     idp += "Repo " + root + " branch grok-orch/v31-canonical-00. ";
     idp += "MUST use git log, read_file, grep. Do not answer from memory. ";
-    idp += "Read: " + dag + " ; docs/native_graph/GSTACK_PARENT_LOOP.md ; ";
-    idp += "results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-SOC-ROOTB-WDMA-00/PREREG.md if present; ";
-    idp += "results/A7-NATIVE-GRAPH/GROK-ORCH-00/U8-UNIFIED-SOC-XSIM-00/CLOSEOUT.md if present. ";
-    idp += "Proposed start_gate=" + current + ". Confirm the true NEXT lake from the DAG. ";
-    idp += "If the proposed gate is already PASS, return the following lake in next_gate. ";
-    idp += "If next lake is U9S/U9I/U9P/U10/P11/P12/P13/P14 or needs BIT/PROGRAM, status=BLOCKED. ";
-    idp += "Allowed auto lakes: U8-SOC-ROOTB-WDMA-00, U8R-REMOVE-SYNTHETIC-PRODUCTION, ";
-    idp += "U9-FINAL-SOURCE-FREEZE-00 (freeze docs only, no bit), U9R-FINAL-REGRESSION-00 (XSim only). ";
+    idp += "READ FIRST: " + plan + " ; " + u9r_prompt + " ; " + ledger + " ; " + dag + ". ";
+    idp += "C00: requested start_gate=" + current + " is LOCKED. ";
+    idp += "U8-R3 / U8R / U9 freeze / P7b are ACCEPTED history. Do not return them as gate. ";
+    idp += "Note in U8-R3 CLOSEOUT 'do not open U8R/U9' is historical bag scope, not the next pointer. ";
+    idp += "Pred 861 is known LM_CHECKPOINT_CONTEXT_MISMATCH, not a new transport bug. ";
+    idp += "If requested is U9R-FINAL-REGRESSION-00, gate MUST be U9R-FINAL-REGRESSION-00. ";
+    idp += "If next is U9S/U9I/U9P/U10, status=BLOCKED. Allowed now: U9R-FINAL-REGRESSION-00 only. ";
     idp += "Return status PASS or BLOCKED, gate=the lake to run now, bag=absolute bag dir, next_gate, summary. ";
     idp += hard;
     let idr = agent(idp, #{
@@ -118,7 +138,21 @@ while round < max_gates {
         if as_str(idr.output.gate) != "" { gate = as_str(idr.output.gate); }
         if as_str(idr.output.bag) != "" { bag = as_str(idr.output.bag); }
     }
-    if id_status == "BLOCKED" || is_hard_stop_gate(gate) {
+    if is_stale_accepted(gate) {
+        log("C00 reject stale scout gate=" + gate + " keep requested=" + current);
+        gate = current;
+        bag = root + "/results/A7-NATIVE-GRAPH/GROK-ORCH-00/" + current;
+        id_status = "PASS";
+    }
+    if is_hard_stop_gate(gate) {
+        complete(#{
+            status: "BLOCKED",
+            gate: gate,
+            reason: "hard-stop class BIT/PROGRAM",
+            lakes: lakes,
+        });
+    }
+    if id_status == "BLOCKED" && !is_u9r(current) {
         complete(#{
             status: "BLOCKED",
             gate: gate,
@@ -136,15 +170,15 @@ while round < max_gates {
     ip += "Worktree: " + root + " . Branch grok-orch/v31-canonical-00. ";
     ip += "Execute ONE lake only: " + gate + ". Bag dir: " + bag + " . ";
     ip += "MUST use read_file, grep, list_dir, run_terminal_command, search_replace. Do not answer from memory. ";
-    ip += "READ FIRST: " + dag + " ; " + bag + "/PREREG.md ; " + skill + " ; ";
-    ip += "GROK_CONTINUOUS_EXECUTION_PROMPT_V3_1.md hard stops; a7-fpga-gate and a7-native-graph-gate skills. ";
+    ip += "READ FIRST: " + plan + " ; " + u9r_prompt + " ; " + ledger + " ; " + dag + " ; " + skill + ". ";
+    ip += "Pin PRODUCTION_RTL=bdddbd68. Do not rewind U8-R3. ";
     ip += "XSim via C:/2026.1/Vivado/bin xvlog/xelab/xsim. License D:\\Xilinx\\licenses\\vivado_basic.lic. ";
-    ip += "Write PREREG LOCK RESULTS CLOSEOUT METRICS ACCEPTANCE is auditor-owned. SHA256 of edited RTL. ";
-    ip += "CLOSEOUT must not claim silicon, Gate14, BOARD_PASS, OUT=653, or LM understands TYPE_CLASS. ";
-    ip += "If the unknown is WDMA/Root-B: prove ACK iff one commit on stall/reset/overflow/flush-reload, ";
-    ip += "or FAIL honestly that SoC WDMA remains OPEN_AUDIT. Do not relabel OPEN_AUDIT as PASS. ";
-    ip += "If the lake is U8R: remove synthetic/NID bind from production path only after Root-B bag exists; ";
-    ip += "keep sim fixtures. One retrieval engine. Regression on production path. ";
+    ip += "If gate is U9R-FINAL-REGRESSION-00: execute R0-R9 from PLAN. ";
+    ip += "Do NOT edit frozen RTL in this same bag to flip FAIL to PASS. ";
+    ip += "Missing wiring = INTEGRATION_GAP. Narrow PASS must not open U9S. ";
+    ip += "Required CLOSEOUT fields: REGRESSION_RESULT FULL_SOC_RESULT M10_SCOPE ROOT_B_SCOPE ";
+    ip += "LM_ORACLE_COMPATIBILITY READY_FOR_FINAL_SYNTH NEXT. ";
+    ip += "Do not claim silicon, Gate14, BOARD_PASS, OUT=653, or LM understands TYPE_CLASS. ";
     ip += "Do not instantiate MIG churn. Do not program. ";
     ip += hard;
     ip += " Return JSON status PASS FAIL or BLOCKED, gate, bag absolute path, summary, xsim line.";
@@ -206,6 +240,17 @@ while round < max_gates {
     log("Auditor verdict=" + v + " overclaim=" + oc.to_string());
 
     let lake_ok = (v == "PASS" && oc == false && fr == false && lb == false);
+    if !lake_ok && is_u9r(gate) {
+        lakes.push(#{ gate: gate, status: "FAIL", bag: impl_bag, verdict: v });
+        complete(#{
+            status: "FAIL",
+            gate: gate,
+            first_divergence: as_str(aud.output.first_divergence),
+            evidence: as_str(aud.output.evidence),
+            lakes: lakes,
+            note: "U9R must not patch frozen RTL in this bag. Keep U9 freeze. Manager assigns C00-C13 revision.",
+        });
+    }
     if !lake_ok && v != "BLOCKED" {
         phase("Repair");
         log("One causal patch. Auditor never patches. gstack /review auto-fix analog then re-QA.");
