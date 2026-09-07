@@ -2,11 +2,11 @@
 
 ```text
 GATE                     = U8-R3-TYPECLASS-TOPK-TO-LM-00
-HEAD                     = 2a3bca3991b29657a5a74c69a6ef0872b8c3e5c0
+HEAD                     = 4ca071e7927aa4ceb6b9868eb17630ffa985eaf0
 ENCODER                  = rtl/native_graph/lm/a7ng_lm_ctx_encoder_v1.sv
 ENCODER_SHA256           = bbd95f7f148e722002e1982292662c8cb54e26ce16ff7ead75400313182892aa
 ENCODER_EDIT             = NO
-GLUE                     = a7ng_lm_ctx_fwd_v1 (bag; not native_ctx_bind)
+GLUE                     = a7ng_lm_ctx_fwd_v1 (bag+rtl identical; not native_ctx_bind)
 RESULT                   = PASS
 SCOPE                    = unified Top-K CLASS_ID → encoder → LM-06 XSim
 SEMANTIC_LM_CLAIM        = NO
@@ -14,7 +14,7 @@ CLASS                    = LM_CHECKPOINT_CONTEXT_MISMATCH
 EVIDENCE                 = XSIM + RTL_FACT
 MARKER                   = U8_R3_TYPECLASS_TOPK_TO_LM_PASS
 
-HEAP                     = 65,66,67 + pads (U7 ranking DUT)
+HEAP                     = 65,66,67 + pads (U7 ranking DUT topk_class_id_o)
 STREAM                   = rank-order [eid,iid,rid,xid]
 CLASS_ID_AS_TOKEN        = NO
 LOW8_CLASS_ID            = NO

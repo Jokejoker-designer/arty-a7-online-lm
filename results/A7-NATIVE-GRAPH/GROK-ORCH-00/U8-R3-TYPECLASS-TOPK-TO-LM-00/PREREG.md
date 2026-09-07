@@ -5,7 +5,7 @@ Encoder law frozen at U8-R2. This gate is unified chain XSim only.
 
 ```text
 GATE     = U8-R3-TYPECLASS-TOPK-TO-LM-00
-HEAD     = 2a3bca3991b29657a5a74c69a6ef0872b8c3e5c0
+HEAD     = 4ca071e7927aa4ceb6b9868eb17630ffa985eaf0
 POLICY   = F_STAGED_FPGA_CONTEXT_ENCODER_V1
 SEMANTIC = LM_CHECKPOINT_CONTEXT_MISMATCH  (unchanged)
 ENCODER  = rtl/native_graph/lm/a7ng_lm_ctx_encoder_v1.sv

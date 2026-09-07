@@ -293,14 +293,12 @@ module tb_u8_r3;
     if (ctx_beats !== 32'd2) diverge("CTX_WE", "beats");
     if (n_busy_rise !== 1) diverge("LM_BUSY", "not one forward");
     if (n_done !== 1) diverge("LM_DONE", "not exactly once");
-    if (n_sfwd < 1) diverge("START_FWD", "zero pulses");
+    if (n_sfwd !== 1) diverge("START_FWD", "not exactly one pulse");
     if (glue_pred !== core_pred) diverge("PRED_OWNER", "glue!=core");
     if (n_host !== 0 || n_host_tok !== 0 || n_host_w !== 0 ||
         n_host_win !== 0 || n_host_addr !== 0)
       diverge("HOST_SEMANTIC_LEAK", "counters");
     if (n_mem_exam !== 0) diverge("HOST_SEMANTIC_LEAK", "mem_we exam");
-    if (n_sfwd > 1)
-      $display("NOTE BIND_REISSUE_UNTIL_BUSY sfwd_pulses=%0d (H4; one busy rise)", n_sfwd);
 
     $display("PRED_OBS core=%0d (not HOLD_A oracle; not OUT=653 claim)", core_pred);
     $display("SEMANTIC_LM_CLAIM=NO CLASS=LM_CHECKPOINT_CONTEXT_MISMATCH");

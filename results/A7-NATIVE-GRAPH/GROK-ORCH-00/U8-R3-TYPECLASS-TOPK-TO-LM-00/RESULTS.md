@@ -1,12 +1,14 @@
 # RESULTS — U8-R3-TYPECLASS-TOPK-TO-LM-00
 
 Marker: `U8_R3_TYPECLASS_TOPK_TO_LM_PASS`
-Sim time: 280342285 ns. XSim wall ~104 s.
+XSim 2026.1 start Mon Sep 7 08:44:58 2026; exit 08:46:50.
+Sim time: 280342605 ns. XSim wall ~110 s. Vivado: `U8_R3_XSIM_OK`.
 Encoder SHA matches U8-R2 (`bbd95f7f…8292aa`). Encoder RTL not edited.
 
 ## Ranking (U7 DUT)
 
 Install-chiller poke `eid=1 iid=1 ev=1 iv=1`, freeze, no train.
+Heap from `topk_class_id_o` (`sc_idi = {16'd0, cid_q}`; pads `0xFFF0+`).
 
 ```text
 HEAP cid=65 66 67 65520 65521 65522 65523 65524
