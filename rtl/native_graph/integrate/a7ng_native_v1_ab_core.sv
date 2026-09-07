@@ -7,7 +7,8 @@ module a7ng_native_v1_ab_core #(
   parameter bit SIM_FULL = 1'b1,
   parameter int unsigned WAVE = 16,
   parameter int unsigned MAX_CANDS = 64,
-  parameter int unsigned PHYS = 4
+  parameter int unsigned PHYS = 4,
+  parameter bit SYNTHETIC_CAND_GEN = 1'b1
 ) (
   input  logic         clk,
   input  logic         rst_n,
@@ -301,7 +302,7 @@ module a7ng_native_v1_ab_core #(
   );
   assign core_done_o = core_done;
 
-  a7ng_g1g5_cofit u_g1g5 (
+  a7ng_g1g5_cofit #(.SYNTHETIC_CAND_GEN(SYNTHETIC_CAND_GEN)) u_g1g5 (
     .clk(clk), .rst_n(rst_n),
     .graph_topk_valid_i(topk_valid_o),
     .graph_id_i(topk_id_o),

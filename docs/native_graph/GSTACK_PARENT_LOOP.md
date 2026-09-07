@@ -38,5 +38,5 @@ reseat `1F0F2ABB`.
 
 ## Current lake
 
-P7 TYPE_CLASS chain XSim PASS. Next auto: P7b WDMA/Root-B txn matrix.
-P8 U8R only if identify confirms after P7b. Not PROGRAM.
+P7b SLICE_XSIM_PASS. P8 U8R cand_* off on soc_top C9. Next: U9 freeze docs.
+Not U9S/PROGRAM. native_ctx_bind still in ab_core.

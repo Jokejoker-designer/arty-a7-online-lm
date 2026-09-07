@@ -13,8 +13,9 @@ P4  U7P-PERSISTENCE-IDENTITY-00 PASS (FLUSH==RELOAD XSim)
 P5  U7A-ROOT-B-FINAL-00 PASS (close-path store; SoC WDMA OPEN_AUDIT)
 P6  U8-R3B-PRODUCTION-GLUE-00 PASS (rtl glue SHA match; U8-R3 XSim PASS; pred=861 MISMATCH)
 P7  U8-UNIFIED-SOC-XSIM-00 PASS (raw query→U6→fwd→LM; ENC==CTX; pred=861; SoC top NOT inst)
-P7b U8-SOC-ROOTB-WDMA-00           ← NEXT (stall/evict/reset/overflow/flush ACK=commit)
-P8  U8R-REMOVE-SYNTHETIC-PRODUCTION (after P7b; do not auto-open)
+P7b U8-SOC-ROOTB-WDMA-00 PASS (slice XSim; m_go_ready; not full SoC)
+P8  U8R-REMOVE-SYNTHETIC-PRODUCTION PASS (soc_top SYNTHETIC_CAND_GEN=0; fixture default 1)
+P9  U9-FINAL-SOURCE-FREEZE-00      ← NEXT (docs/manifest only; dirty tree STOP; no bit)
 P9  U9-FINAL-SOURCE-FREEZE-00
 P10 U9R-FINAL-REGRESSION-00
 P11 U9S / U9I  (NEW unique bit SHA)
